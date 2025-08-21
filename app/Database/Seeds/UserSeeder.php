@@ -9,32 +9,47 @@ class UserSeeder extends Seeder
     public function run()
     {
         $data = [
-        [
-            'username' => 'admin01',
-            'email'    => 'admin@example.com',
-            'password' => password_hash('admin123', PASSWORD_DEFAULT),
-            'role'     => 'admin',
-        ],
-        [
-            'username' => 'instructor01',
-            'email'    => 'instructor@example.com',
-            'password' => password_hash('teach123', PASSWORD_DEFAULT),
-            'role'     => 'instructor',
-        ],
-        [
-            'username' => 'student01',
-            'email'    => 'student1@example.com',
-            'password' => password_hash('stud123', PASSWORD_DEFAULT),
-            'role'     => 'student',
-        ],
-        [
-            'username' => 'student02',
-            'email'    => 'student2@example.com',
-            'password' => password_hash('stud456', PASSWORD_DEFAULT),
-            'role'     => 'student',
-        ],
-    ];
+            // Students
+            [
+                'username' => 'AliceR',
+                'email'    => 'alice.r@example.com',
+                'password' => password_hash('student123', PASSWORD_DEFAULT),
+                'role'     => 'student',
+            ],
+            [
+                'username' => 'BobM',
+                'email'    => 'bob.m@example.com',
+                'password' => password_hash('student123', PASSWORD_DEFAULT),
+                'role'     => 'student',
+            ],
+            [
+                'username' => 'CarolS',
+                'email'    => 'carol.s@example.com',
+                'password' => password_hash('student123', PASSWORD_DEFAULT),
+                'role'     => 'student',
+            ],
+            // Instructors
+            [
+                'username' => 'Prof. DavidT',
+                'email'    => 'david.t@example.com',
+                'password' => password_hash('instructor123', PASSWORD_DEFAULT),
+                'role'     => 'instructor',
+            ],
+            [
+                'username' => 'Prof. EmmaL',
+                'email'    => 'emma.l@example.com',
+                'password' => password_hash('instructor123', PASSWORD_DEFAULT),
+                'role'     => 'instructor',
+            ],
+            // Admin
+            [
+                'username' => 'AdminUser',
+                'email'    => 'admin@example.com',
+                'password' => password_hash('admin123', PASSWORD_DEFAULT),
+                'role'     => 'admin',
+            ],
+        ];
 
-    $this->db->table('users')->insertBatch($data);
+        $this->db->table('users')->insertBatch($data);
     }
 }
