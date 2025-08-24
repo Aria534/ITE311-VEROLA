@@ -5,6 +5,12 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
-$routes->get('/home', 'Home::index');
 
+// Homepage
+$routes->get('/', 'Home::index');
+
+// About Page
+$routes->get('/about', 'Home::about');
+
+// Contact Page
+$routes->get('/contact', 'Home::contact');
