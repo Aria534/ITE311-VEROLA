@@ -1,0 +1,48 @@
+CRITICAL - 2025-08-25 08:54:59 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "footer.php"
+[Method: GET, Route: about]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('footer.php')
+ 2 SYSTEMPATH\View\View.php(475): CodeIgniter\View\View->render('footer', null, true)
+ 3 APPPATH\Views\about.php(35): CodeIgniter\View\View->include('footer')
+ 4 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\ITE311-VEROLA\\app\\Views\\about.php')
+ 5 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 6 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('about', [], true)
+ 7 APPPATH\Controllers\Home.php(14): view('about')
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->about()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-08-25 08:55:56 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "footer.php"
+[Method: GET, Route: about]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('footer.php')
+ 2 SYSTEMPATH\View\View.php(475): CodeIgniter\View\View->render('footer', null, true)
+ 3 APPPATH\Views\about.php(35): CodeIgniter\View\View->include('footer')
+ 4 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\ITE311-VEROLA\\app\\Views\\about.php')
+ 5 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 6 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('about', [], true)
+ 7 APPPATH\Controllers\Home.php(14): view('about')
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->about()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-08-25 09:35:30 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "footer.php"
+[Method: GET, Route: contact]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('footer.php')
+ 2 SYSTEMPATH\View\View.php(475): CodeIgniter\View\View->render('footer', null, true)
+ 3 APPPATH\Views\contact.php(42): CodeIgniter\View\View->include('footer')
+ 4 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\ITE311-VEROLA\\app\\Views\\contact.php')
+ 5 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 6 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('contact', [], true)
+ 7 APPPATH\Controllers\Home.php(19): view('contact')
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->contact()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
