@@ -1,8 +1,29 @@
 <?= $this->include('header') ?>
 
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.7;
+        color: #333;
+    }
+
+    h1, h3 {
+        font-weight: 600;
+        color: #222;
+    }
+
+    p, li {
+        font-size: 16px;
+    }
+
+    ul li {
+        margin-bottom: 8px;
+    }
+</style>
+
 <div class="container mt-5">
-    <h1 class="mb-4">About Us</h1>
-    <p>
+    <h1 class="mb-4 text-center">About Us</h1>
+    <p class="text-center">
         Welcome to our <strong>Learning Management System (LMS)</strong>!
     </p>
     <p>
@@ -31,7 +52,3 @@
         our system is here to make learning better and more effective.
     </p>
 </div>
-
-<!-- Footer (kasama na dito mismo) -->
-<footer class="text-center mt-5 p-3 bg-light border-top">
-</footer>
