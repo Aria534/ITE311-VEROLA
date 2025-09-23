@@ -19,75 +19,82 @@ class Auth extends Controller
         $this->db         = Database::connect();
     }
 
+    // ======================
     // Register
+    // ======================
     public function register()
     {
-        if ($this->request->getMethod() === 'POST') {
-            $rules = [
-                'name'             => 'required|min_length[3]',
-                'email'            => 'required|valid_email|is_unique[users.email]',
-                'password'         => 'required|min_length[6]',
-                'password_confirm' => 'required|matches[password]'
-            ];
+        if ($this->request->getMethod() !== 'POST') {
+            return view('auth/register');
+        }
 
-            if ($this->validate($rules)) {
-                $data = [
-                    'name'       => $this->request->getPost('name'),
-                    'email'      => $this->request->getPost('email'),
-                    'password'   => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-                    'role'       => $this->request->getPost('role') ?? 'user',
-                    'created_at' => date('Y-m-d H:i:s')
-                ];
+        $rules = [
+            'name'             => 'required|min_length[3]',
+            'email'            => 'required|valid_email|is_unique[users.email]',
+            'password'         => 'required|min_length[6]',
+            'password_confirm' => 'required|matches[password]'
+        ];
 
-                $this->db->table('users')->insert($data);
-
-                $this->session->setFlashdata('success', 'Registration successful! Please log in.');
-                return redirect()->to(base_url('login'));
-            }
-
+        if (! $this->validate($rules)) {
             $this->session->setFlashdata('errors', $this->validation->getErrors());
             return redirect()->back()->withInput();
         }
 
-        return view('auth/register');
+        $this->db->table('users')->insert([
+            'name'       => $this->request->getPost('name'),
+            'email'      => $this->request->getPost('email'),
+            'password'   => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            'role'       => $this->request->getPost('role') ?? 'student',
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+
+        $this->session->setFlashdata('success', 'Registration successful! Please log in.');
+        return redirect()->to(base_url('login'));
     }
 
+    // ======================
     // Login
+    // ======================
     public function login()
     {
-        if ($this->request->getMethod() === 'POST') {
-            $email    = $this->request->getPost('email');
-            $password = $this->request->getPost('password');
+        if ($this->request->getMethod() !== 'POST') {
+            return view('auth/login');
+        }
 
-            $user = $this->db->table('users')->where('email', $email)->get()->getRowArray();
+        $email    = $this->request->getPost('email');
+        $password = $this->request->getPost('password');
 
-            if ($user && password_verify($password, $user['password'])) {
-                $this->session->set([
-                    'userID'     => $user['id'],
-                    'name'       => $user['name'],
-                    'email'      => $user['email'],
-                    'role'       => $user['role'],
-                    'isLoggedIn' => true
-                ]);
+        $user = $this->db->table('users')->where('email', $email)->get()->getRowArray();
 
-                return redirect()->to(base_url('dashboard'));
-            }
-
+        if (! $user || ! password_verify($password, $user['password'])) {
             $this->session->setFlashdata('login_error', 'Invalid email or password.');
             return redirect()->back()->withInput();
         }
 
-        return view('auth/login');
+        // Save session
+        $this->session->set([
+            'userID'     => $user['id'],
+            'name'       => $user['name'],
+            'email'      => $user['email'],
+            'role'       => $user['role'],
+            'isLoggedIn' => true
+        ]);
+
+        return redirect()->to($this->getDashboardByRole($user['role']));
     }
 
+    // ======================
     // Logout
+    // ======================
     public function logout()
     {
         $this->session->destroy();
         return redirect()->to(base_url('login'));
     }
 
-    // Dashboard
+    // ======================
+    // Fallback Dashboard
+    // ======================
     public function dashboard()
     {
         if (! $this->session->get('isLoggedIn')) {
@@ -101,5 +108,18 @@ class Auth extends Controller
                 'role'  => $this->session->get('role')
             ]
         ]);
+    }
+
+    // ======================
+    // Helper: Role Redirect
+    // ======================
+    private function getDashboardByRole(string $role): string
+    {
+        return match ($role) {
+            'admin'   => base_url('admin/dashboard'),
+            'teacher' => base_url('teacher/dashboard'),
+            'student' => base_url('student/dashboard'),
+            default   => base_url('dashboard'),
+        };
     }
 }
