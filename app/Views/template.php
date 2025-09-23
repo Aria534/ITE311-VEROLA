@@ -28,7 +28,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link active" href="#"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a class="nav-link active" href="#"><i class="bi bi-speedometer2"></i> Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#"><i class="bi bi-journal-bookmark"></i> Courses</a>

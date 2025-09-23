@@ -2,99 +2,104 @@
 
 namespace App\Controllers;
 
-class Auth extends BaseController
-{
+use CodeIgniter\Controller;
+use Config\Services;
+use Config\Database;
 
+class Auth extends Controller
+{
+    protected $session;
+    protected $validation;
+    protected $db;
+
+    public function __construct()
+    {
+        $this->session    = Services::session();
+        $this->validation = Services::validation();
+        $this->db         = Database::connect();
+    }
+
+    // Register
+    public function register()
+    {
+        if ($this->request->getMethod() === 'POST') {
+            $rules = [
+                'name'             => 'required|min_length[3]',
+                'email'            => 'required|valid_email|is_unique[users.email]',
+                'password'         => 'required|min_length[6]',
+                'password_confirm' => 'required|matches[password]'
+            ];
+
+            if ($this->validate($rules)) {
+                $data = [
+                    'name'       => $this->request->getPost('name'),
+                    'email'      => $this->request->getPost('email'),
+                    'password'   => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+                    'role'       => $this->request->getPost('role') ?? 'user',
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+
+                $this->db->table('users')->insert($data);
+
+                $this->session->setFlashdata('success', 'Registration successful! Please log in.');
+                return redirect()->to(base_url('login'));
+            }
+
+            $this->session->setFlashdata('errors', $this->validation->getErrors());
+            return redirect()->back()->withInput();
+        }
+
+        return view('auth/register');
+    }
+
+    // Login
     public function login()
     {
-        $session = session();
-        if ($session->get('isLoggedIn')) {
-            return redirect()->to(base_url('dashboard'));
+        if ($this->request->getMethod() === 'POST') {
+            $email    = $this->request->getPost('email');
+            $password = $this->request->getPost('password');
+
+            $user = $this->db->table('users')->where('email', $email)->get()->getRowArray();
+
+            if ($user && password_verify($password, $user['password'])) {
+                $this->session->set([
+                    'userID'     => $user['id'],
+                    'name'       => $user['name'],
+                    'email'      => $user['email'],
+                    'role'       => $user['role'],
+                    'isLoggedIn' => true
+                ]);
+
+                return redirect()->to(base_url('dashboard'));
+            }
+
+            $this->session->setFlashdata('login_error', 'Invalid email or password.');
+            return redirect()->back()->withInput();
         }
 
-        return view('login');
+        return view('auth/login');
     }
 
-    public function attempt()
-    {
-        $request = $this->request;
-        $email = trim((string) $request->getPost('email'));
-        $password = (string) $request->getPost('password');
-
-        // Try database user first
-        $userModel = new \App\Models\UserModel();
-        $user = $userModel->where('email', $email)->first();
-        if ($user && password_verify($password, $user['password'])) {
-            $session = session();
-            $session->set([
-                'isLoggedIn' => true,
-                'userEmail' => $email,
-            ]);
-            return redirect()->to(base_url('dashboard'));
-        }
-
-        return redirect()->back()->with('login_error', 'Invalid credentials');
-    }
-
+    // Logout
     public function logout()
     {
-        $session = session();
-        $session->destroy();
+        $this->session->destroy();
         return redirect()->to(base_url('login'));
     }
 
-    public function register()
+    // Dashboard
+    public function dashboard()
     {
-        $session = session();
-        if ($session->get('isLoggedIn')) {
-            return redirect()->to(base_url('dashboard'));
+        if (! $this->session->get('isLoggedIn')) {
+            return redirect()->to(base_url('login'));
         }
 
-        return view('register');
-    }
-
-    public function store()
-    {
-        $username = trim((string) $this->request->getPost('username'));
-        $email = trim((string) $this->request->getPost('email'));
-        $password = (string) $this->request->getPost('password');
-        $passwordConfirm = (string) $this->request->getPost('password_confirm');
-
-        if ($username === '' || $email === '' || $password === '' || $passwordConfirm === '') {
-            return redirect()->back()->withInput()->with('register_error', 'All fields are required.');
-        }
-
-        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return redirect()->back()->withInput()->with('register_error', 'Invalid email address.');
-        }
-
-        if ($password !== $passwordConfirm) {
-            return redirect()->back()->withInput()->with('register_error', 'Passwords do not match.');
-        }
-
-        $userModel = new \App\Models\UserModel();
-
-        // Check for existing email
-        if ($userModel->where('email', $email)->first()) {
-            return redirect()->back()->withInput()->with('register_error', 'Email is already registered.');
-        }
-
-        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-
-        $userId = $userModel->insert([
-            'username' => $username,
-            'email' => $email,
-            'role' => 'student',
-            'password' => $passwordHash,
-        ], true);
-
-        if (! $userId) {
-            return redirect()->back()->withInput()->with('register_error', 'Registration failed.');
-        }
-
-        // Redirect to login with success message
-        return redirect()
-            ->to(base_url('login'))
-            ->with('register_success', 'Account created successfully. Please log in.');
+        return view('auth/dashboard', [
+            'user' => [
+                'name'  => $this->session->get('name'),
+                'email' => $this->session->get('email'),
+                'role'  => $this->session->get('role')
+            ]
+        ]);
     }
 }

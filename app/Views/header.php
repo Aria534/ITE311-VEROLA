@@ -27,27 +27,12 @@
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
             <a class="nav-link" href="<?= base_url('/') ?>">
-              <i class="bi bi-speedometer2"></i> Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="<?= base_url('/courses') ?>">
-              <i class="bi bi-journal-bookmark"></i> Courses
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="<?= base_url('/grades') ?>">
-              <i class="bi bi-bar-chart-line"></i> Grades
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="<?= base_url('/profile') ?>">
-              <i class="bi bi-person-circle"></i> Profile
+              <i class="bi bi-speedometer2"></i> Home
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="<?= base_url('/about') ?>">
-              <i class="bi bi-info-circle"></i> About Us
+              <i class="bi bi-info-circle"></i> About 
             </a>
           </li>
           <li class="nav-item">
@@ -56,10 +41,9 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<?= base_url('/settings') ?>">
-              <i class="bi bi-gear"></i> Settings
+            <a class="nav-link" href="<?= base_url('/login') ?>">
+              <i ></i> Login
             </a>
-          </li>
         </ul>
       </div>
     </div>

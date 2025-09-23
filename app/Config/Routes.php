@@ -6,20 +6,15 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-// Homepage
 $routes->get('/', 'Home::index');
-
-// About Page
 $routes->get('/about', 'Home::about');
-
-// Contact Page
 $routes->get('/contact', 'Home::contact');
 
-// Authentication routes
-$routes->get('/login', 'Auth::login');
-$routes->post('/login', 'Auth::attempt');
-$routes->get('/logout', 'Auth::logout');
-$routes->get('/dashboard', 'Home::dashboard');
-// Registration
 $routes->get('/register', 'Auth::register');
-$routes->post('/register', 'Auth::store');
+$routes->post('/register', 'Auth::register');
+
+$routes->get('/login', 'Auth::login');
+$routes->post('/login', 'Auth::login');
+
+$routes->get('/logout', 'Auth::logout');
+$routes->get('/dashboard', 'Auth::dashboard');
