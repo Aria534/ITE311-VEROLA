@@ -28,15 +28,15 @@ class UserSeeder extends Seeder
                 'password' => password_hash('mia123', PASSWORD_DEFAULT),
                 'role'     => 'student',
             ],
-            // Instructors
+            // Teacher
             [
-                'username' => 'Prof. Jim',
+                'username' => 'Jim Jamero',
                 'email'    => 'jim123@gmail.com',
                 'password' => password_hash('teacher123', PASSWORD_DEFAULT),
                 'role'     => 'teacher',
             ],
             [
-                'username' => 'Prof. Bryll',
+                'username' => 'Bryll Nosotros',
                 'email'    => 'bryll@gmail.com',
                 'password' => password_hash('teacher123', PASSWORD_DEFAULT),
                 'role'     => 'teacher',
