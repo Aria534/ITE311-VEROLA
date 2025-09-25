@@ -11,21 +11,21 @@ class UserSeeder extends Seeder
         $data = [
             // Students
             [
-                'username' => 'Aira',
+                'username' => 'Aira P. Verola',
                 'email'    => 'airaverola@gmail.com',
                 'password' => password_hash('airaverola123', PASSWORD_DEFAULT),
                 'role'     => 'student',
             ],
             [
-                'username' => 'Jela',
-                'email'    => 'jela@gmail.com',
-                'password' => password_hash('jelat123', PASSWORD_DEFAULT),
+                'username' => 'Hazel Acierto',
+                'email'    => 'hazel@gmail.com',
+                'password' => password_hash('hazel123', PASSWORD_DEFAULT),
                 'role'     => 'student',
             ],
             [
-                'username' => 'Mia',
-                'email'    => 'mia@gmail.com',
-                'password' => password_hash('mia123', PASSWORD_DEFAULT),
+                'username' => 'Leizl Casilao',
+                'email'    => 'leizl@gmail.com',
+                'password' => password_hash('leizl123', PASSWORD_DEFAULT),
                 'role'     => 'student',
             ],
             // Teacher

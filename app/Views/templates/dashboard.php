@@ -1,41 +1,31 @@
-<?= $this->include('templates/header') ?>
+<?= $this->extend('templates/header') ?>
+<?= $this->section('content') ?>
 
+<div class="dashboard-card">
+  <h2 class="dashboard-title">Welcome, <?= esc(session()->get('username')) ?>!</h2>
+  <p class="dashboard-subtitle">You are logged in as <span class="fw-semibold"><?= esc(session()->get('role')) ?></span>.</p>
+  <hr>
 
-<div class="container mt-5">
-    <div class="card shadow-sm p-4">
-        <h2 class="mb-3">Welcome, <?= esc(session()->get('username')) ?>!</h2>
-        <p class="text-muted">You are logged in as <strong><?= esc(session()->get('role')) ?></strong>.</p>
+  <?php if (session()->get('role') === 'student'): ?>
+    <h5 class="fw-bold mb-3">
+      <i class="bi bi-pin-angle-fill text-danger"></i> Student 
+    </h5>
 
-        <hr>
-
-        <!-- Hard-coded but role-based content -->
-        <?php if (session()->get('role') === 'admin'): ?>
-            <h4>📌 Admin Panel</h4>
-            <ul>
-                <li><a href="<?= base_url('users/manage') ?>">Manage Users</a></li>
-                <li><a href="<?= base_url('reports') ?>">View Reports</a></li>
-            </ul>
-
-        <?php elseif (session()->get('role') === 'teacher'): ?>
-            <h4>📌 Teacher Panel</h4>
-            <ul>
-                <li><a href="<?= base_url('courses/manage') ?>">Manage Courses</a></li>
-                <li><a href="<?= base_url('students') ?>">View Students</a></li>
-            </ul>
-
-        <?php elseif (session()->get('role') === 'student'): ?>
-            <h4>📌 Student Panel</h4>
-            <ul>
-                <li><a href="<?= base_url('courses/enrolled') ?>">My Courses</a></li>
-                <li><a href="<?= base_url('grades') ?>">My Grades</a></li>
-            </ul>
-        <?php endif; ?>
-
-        <hr>
-
-        <a href="<?= base_url('logout') ?>" class="btn btn-danger">Logout</a>
+    <div class="ms-2 mb-4">
+      <a href="<?= base_url('courses/enrolled') ?>" class="panel-link">
+        <i class="bi bi-book text-primary"></i> My Schedule
+      </a>
+      <a href="<?= base_url('grades') ?>" class="panel-link">
+        <i class="bi bi-award text-success"></i> My Grades
+      </a>
     </div>
+  <?php endif; ?>
+
+  <hr>
+
+  <a href="<?= base_url('/logout') ?>" class="btn btn-danger w-100 logout-btn">
+    <i class="bi bi-box-arrow-right me-1"></i> Logout
+  </a>
 </div>
 
-</body>
-</html>
+<?= $this->endSection() ?>
