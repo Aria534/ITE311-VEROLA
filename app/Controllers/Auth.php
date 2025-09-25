@@ -29,7 +29,7 @@ class Auth extends Controller
         }
 
         $rules = [
-            'name'             => 'required|min_length[3]',
+            'username'         => 'required|min_length[3]',
             'email'            => 'required|valid_email|is_unique[users.email]',
             'password'         => 'required|min_length[6]',
             'password_confirm' => 'required|matches[password]'
@@ -41,7 +41,7 @@ class Auth extends Controller
         }
 
         $this->db->table('users')->insert([
-            'name'       => $this->request->getPost('name'),
+            'username'   => $this->request->getPost('username'),
             'email'      => $this->request->getPost('email'),
             'password'   => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             'role'       => $this->request->getPost('role') ?? 'student',
@@ -74,13 +74,14 @@ class Auth extends Controller
         // Save session
         $this->session->set([
             'userID'     => $user['id'],
-            'name'       => $user['name'],
+            'username'   => $user['username'],
             'email'      => $user['email'],
             'role'       => $user['role'],
             'isLoggedIn' => true
         ]);
 
-        return redirect()->to($this->getDashboardByRole($user['role']));
+        // ✅ Redirect all users to centralized dashboard
+        return redirect()->to(base_url('dashboard'));
     }
 
     // ======================
@@ -93,7 +94,7 @@ class Auth extends Controller
     }
 
     // ======================
-    // Fallback Dashboard
+    // Centralized Dashboard
     // ======================
     public function dashboard()
     {
@@ -101,25 +102,7 @@ class Auth extends Controller
             return redirect()->to(base_url('login'));
         }
 
-        return view('auth/dashboard', [
-            'user' => [
-                'name'  => $this->session->get('name'),
-                'email' => $this->session->get('email'),
-                'role'  => $this->session->get('role')
-            ]
-        ]);
-    }
-
-    // ======================
-    // Helper: Role Redirect
-    // ======================
-    private function getDashboardByRole(string $role): string
-    {
-        return match ($role) {
-            'admin'   => base_url('admin/dashboard'),
-            'teacher' => base_url('teacher/dashboard'),
-            'student' => base_url('student/dashboard'),
-            default   => base_url('dashboard'),
-        };
+        // Load centralized dashboard view
+        return view('templates/dashboard');
     }
 }

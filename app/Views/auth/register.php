@@ -35,12 +35,13 @@
             <form action="<?= base_url('register') ?>" method="post">
                 <?= csrf_field() ?>
 
+                <!-- FIXED: use "username" instead of "name" -->
                 <div class="mb-3">
-                    <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+                    <input type="text" name="username" class="form-control" placeholder="Username" value="<?= old('username') ?>" required>
                 </div>
 
                 <div class="mb-3">
-                    <input type="email" name="email" class="form-control" placeholder="Email" required>
+                    <input type="email" name="email" class="form-control" placeholder="Email" value="<?= old('email') ?>" required>
                 </div>
 
                 <div class="mb-3">
@@ -56,6 +57,7 @@
                     <select name="role" class="form-select" required>
                         <option value="" disabled selected>Select Role</option>
                         <option value="student">Student</option>
+                        <option value="instructor">Teacher</option>
                         <option value="admin">Admin</option>
                     </select>
                 </div>
