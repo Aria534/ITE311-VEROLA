@@ -52,16 +52,6 @@
                     <input type="password" name="password_confirm" class="form-control" placeholder="Confirm Password" required>
                 </div>
 
-                <!-- Role Selection -->
-                <div class="mb-3">
-                    <select name="role" class="form-select" required>
-                        <option value="" disabled selected>Select Role</option>
-                        <option value="student">Student</option>
-                        <option value="instructor">Teacher</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">Register</button>
                 </div>

@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'username' => 'Bryll Nosotros',
-                'email'    => 'bryll@gmail.com',
+                'email'    => 'bryl23@gmail.com',
                 'password' => password_hash('teacher123', PASSWORD_DEFAULT),
                 'role'     => 'teacher',
             ],

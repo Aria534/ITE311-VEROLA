@@ -2,21 +2,15 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
-use Config\Services;
-use Config\Database;
+use App\Models\UserModel;
 
-class Auth extends Controller
+class Auth extends BaseController
 {
-    protected $session;
-    protected $validation;
-    protected $db;
+    protected $userModel;
 
     public function __construct()
     {
-        $this->session    = Services::session();
-        $this->validation = Services::validation();
-        $this->db         = Database::connect();
+        $this->userModel = new UserModel();
     }
 
     // ======================
@@ -36,11 +30,10 @@ class Auth extends Controller
         ];
 
         if (! $this->validate($rules)) {
-            $this->session->setFlashdata('errors', $this->validation->getErrors());
-            return redirect()->back()->withInput();
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $this->db->table('users')->insert([
+        $this->userModel->insert([
             'username'   => $this->request->getPost('username'),
             'email'      => $this->request->getPost('email'),
             'password'   => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
@@ -48,8 +41,7 @@ class Auth extends Controller
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
-        $this->session->setFlashdata('success', 'Registration successful! Please log in.');
-        return redirect()->to(base_url('login'));
+        return redirect()->to(base_url('login'))->with('success', 'Registration successful! Please log in.');
     }
 
     // ======================
@@ -64,23 +56,22 @@ class Auth extends Controller
         $email    = $this->request->getPost('email');
         $password = $this->request->getPost('password');
 
-        $user = $this->db->table('users')->where('email', $email)->get()->getRowArray();
+        $user = $this->userModel->where('email', $email)->first();
 
         if (! $user || ! password_verify($password, $user['password'])) {
-            $this->session->setFlashdata('login_error', 'Invalid email or password.');
-            return redirect()->back()->withInput();
+            return redirect()->back()->withInput()->with('login_error', 'Invalid email or password.');
         }
 
         // Save session
-        $this->session->set([
+        $sessionData = [
             'userID'     => $user['id'],
             'username'   => $user['username'],
             'email'      => $user['email'],
             'role'       => $user['role'],
             'isLoggedIn' => true
-        ]);
+        ];
+        session()->set($sessionData);
 
-        // ✅ Redirect all users to centralized dashboard
         return redirect()->to(base_url('dashboard'));
     }
 
@@ -89,7 +80,7 @@ class Auth extends Controller
     // ======================
     public function logout()
     {
-        $this->session->destroy();
+        session()->destroy();
         return redirect()->to(base_url('login'));
     }
 
@@ -98,11 +89,21 @@ class Auth extends Controller
     // ======================
     public function dashboard()
     {
-        if (! $this->session->get('isLoggedIn')) {
+        if (! session()->get('isLoggedIn')) {
             return redirect()->to(base_url('login'));
         }
 
-        // Load centralized dashboard view
-        return view('templates/dashboard');
+        $role = session()->get('role');
+
+        $data = [
+            'role'     => $role,
+            'username' => session()->get('username')
+        ];
+
+        if ($role === 'admin') {
+            $data['totalUsers'] = $this->userModel->countAll();
+        }
+
+        return view('auth/dashboard', $data);
     }
 }

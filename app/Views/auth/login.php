@@ -19,14 +19,14 @@
         <div class="card-body">
             <h3 class="text-center mb-4">Login</h3>
 
-            <!-- ✅ Success Message -->
+            <!--Success Message -->
             <?php if (session()->getFlashdata('success')): ?>
                 <div class="alert alert-success">
                     <?= esc(session()->getFlashdata('success')) ?>
                 </div>
             <?php endif; ?>
 
-            <!-- ❌ Error Message -->
+            <!--Error Message -->
             <?php if (session()->getFlashdata('error')): ?>
                 <div class="alert alert-danger">
                     <?= esc(session()->getFlashdata('error')) ?>
