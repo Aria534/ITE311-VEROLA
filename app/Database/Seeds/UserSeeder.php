@@ -31,13 +31,13 @@ class UserSeeder extends Seeder
             // Teacher
             [
                 'username' => 'Jim Jamero',
-                'email'    => 'jim123@gmail.com',
+                'email'    => 'jim@gmail.com',
                 'password' => password_hash('teacher123', PASSWORD_DEFAULT),
                 'role'     => 'teacher',
             ],
             [
                 'username' => 'Bryll Nosotros',
-                'email'    => 'bryl23@gmail.com',
+                'email'    => 'bryll@gmail.com',
                 'password' => password_hash('teacher123', PASSWORD_DEFAULT),
                 'role'     => 'teacher',
             ],
