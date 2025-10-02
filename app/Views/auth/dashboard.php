@@ -16,7 +16,8 @@
     <div class="row g-4">
 
       <?php if ($role === 'student'): ?>
-        <!-- ================= STUDENT DASHBOARD ================= -->
+        <!--STUDENT DASHBOARD-->
+        
         <!-- My Grades -->
         <div class="col-md-3">
           <div class="card border-0 bg-light shadow-sm h-100 text-center">
@@ -79,7 +80,8 @@
       <?php endif; ?>
 
       <?php if ($role === 'teacher'): ?>
-        <!-- ================= TEACHER DASHBOARD ================= -->
+        <!--TEACHER DASHBOARD-->
+
         <!-- Manage Classes -->
         <div class="col-md-3">
           <div class="card border-0 bg-light shadow-sm h-100 text-center">
@@ -148,7 +150,7 @@
     </div>
 
      <?php if ($role === 'admin'): ?>
-        <!-- ================= ADMIN DASHBOARD ================= -->
+        <!-- ADMIN DASHBOARD-->
      <div class="row g-3"> 
   <!-- Reports -->
   <div class="col-md-4">
@@ -195,6 +197,7 @@
     </div>
   </div>
 </div>
+
 <?php endif; ?>
     </div>
   </div>
