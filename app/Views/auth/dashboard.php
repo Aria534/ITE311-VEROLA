@@ -61,6 +61,21 @@
             </div>
           </div>
         </div>
+
+        <!-- Attendance -->
+<div class="col-md-3">
+  <div class="card border-0 bg-light shadow-sm h-100 text-center">
+    <div class="card-body">
+      <div class="mb-3">
+        <span class="d-inline-flex justify-content-center align-items-center bg-danger text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
+          <i class="bi bi-clipboard-check"></i>
+        </span>
+      </div>
+      <h5 class="fw-bold mb-3">Attendance</h5>
+      <a href="#" class="btn btn-outline-danger btn-sm">View Attendance</a>
+    </div>
+  </div>
+</div>
       <?php endif; ?>
 
       <?php if ($role === 'teacher'): ?>
@@ -132,6 +147,55 @@
       <?php endif; ?>
     </div>
 
+     <?php if ($role === 'admin'): ?>
+        <!-- ================= ADMIN DASHBOARD ================= -->
+     <div class="row g-3"> 
+  <!-- Reports -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-light shadow-sm h-100 text-center">
+      <div class="card-body">
+        <div class="mb-3">
+          <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
+            <i class="bi bi-graph-up"></i>
+          </span>
+        </div>
+        <h5 class="fw-bold mb-3">Reports</h5>
+        <a href="#" class="btn btn-outline-success btn-sm">View Reports</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-light shadow-sm h-100 text-center">
+      <div class="card-body">
+        <div class="mb-3">
+          <span class="d-inline-flex justify-content-center align-items-center bg-danger text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
+            <i class="bi bi-bar-chart"></i>
+          </span>
+        </div>
+        <h5 class="fw-bold mb-3">Analytics</h5>
+        <a href="#" class="btn btn-outline-danger btn-sm">View Analytics</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Management -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-light shadow-sm h-100 text-center">
+      <div class="card-body">
+        <div class="mb-3">
+          <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
+            <i class="bi bi-folder"></i>
+          </span>
+        </div>
+        <h5 class="fw-bold mb-3">Content Management</h5>
+        <a href="#" class="btn btn-outline-primary btn-sm">Manage Content</a>
+      </div>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
     </div>
   </div>
 </div>
