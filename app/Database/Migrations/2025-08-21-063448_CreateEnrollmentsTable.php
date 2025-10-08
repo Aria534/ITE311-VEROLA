@@ -9,21 +9,43 @@ class CreateEnrollmentsTable extends Migration
 {
     public function up()
     {
-        $this->forge->addField([
-            'id'         => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-            'user_id'    => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true],
-            'course_id'  => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true],
-            'created_at' => ['type' => 'TIMESTAMP', 'default' => new RawSql('CURRENT_TIMESTAMP')],
-        ]);
+       $this->forge->addField([
+            'id' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true,
+                'auto_increment' => true,
+                ],
+            'user_id' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true,
+                ],
+            'course_id' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true,
+                ],
+             'enrollment_date' => [
+                'type' => 'DATETIME',
+                'null' => false,
+            ],
+                ]);
 
-        $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('course_id', 'courses', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('enrollments');
-    }
 
-    public function down()
-    {
-        $this->forge->dropTable('enrollments');
-    }
+$this->forge->addKey('id', true);
+// add foreign keys (requires referenced tables exist)
+$this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
+$this->forge->addForeignKey('course_id', 'courses', 'id', 'CASCADE', 'CASCADE');
+
+
+$this->forge->createTable('enrollments');
+}
+
+
+public function down()
+{
+// Drops the table (and its FKs)
+$this->forge->dropTable('enrollments', true);
+}
 }
