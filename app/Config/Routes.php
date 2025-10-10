@@ -28,6 +28,9 @@ $routes->get('/teacher/dashboard', 'TeacherController::dashboard');
 $routes->get('/student/dashboard', 'StudentController::dashboard');
 
 // Courses
+// Courses
+$routes->get('/courses', 'Course::index');
 $routes->post('/course/enroll', 'Course::enroll');
+
 
 

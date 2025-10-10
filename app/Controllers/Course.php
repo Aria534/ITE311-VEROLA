@@ -49,7 +49,7 @@ class Course extends BaseController
             'availableCourses' => $availableCourses
         ];
 
-        return view('student/dashboard', $data);
+        return view('authdashboard', $data);
     }
 
     // AJAX enrollment
