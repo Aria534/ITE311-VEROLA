@@ -26,3 +26,8 @@ $routes->get('/dashboard', 'Auth::dashboard');
 $routes->get('/admin/dashboard', 'AdminController::dashboard');
 $routes->get('/teacher/dashboard', 'TeacherController::dashboard');
 $routes->get('/student/dashboard', 'StudentController::dashboard');
+
+// Courses
+$routes->post('/course/enroll', 'Course::enroll');
+
+

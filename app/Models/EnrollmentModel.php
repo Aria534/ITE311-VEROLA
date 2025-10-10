@@ -1,47 +1,45 @@
 <?php
 
-
 namespace App\Models;
-
 
 use CodeIgniter\Model;
 
-
 class EnrollmentModel extends Model
-    {
+{
     protected $table = 'enrollments';
     protected $primaryKey = 'id';
     protected $allowedFields = ['user_id', 'course_id', 'enrollment_date'];
-    protected $useTimestamps = false; // we set enrollment_date manually
-
+    protected $useTimestamps = false;
 
     /**
-    * Inserts a new enrollment record. Returns insert ID or false.
-    */
+     * Enroll a user in a course
+     */
     public function enrollUser(array $data)
     {
-    return $this->insert($data);
+        if ($this->isAlreadyEnrolled($data['user_id'], $data['course_id'])) {
+            return false;
+        }
+        return $this->insert($data);
     }
 
-
     /**
-    * Returns all enrolled courses for a user (with course details)
-    */
-    public function getUserEnrollments($user_id)
+     * Get all courses a user is enrolled in
+     */
+    public function getUserEnrollments(int $user_id)
     {
-    return $this->select('enrollments.*, courses.id as course_id, courses.title as course_title, courses.description')
-    ->join('courses', 'courses.id = enrollments.course_id')
-    ->where('enrollments.user_id', $user_id)
-    ->orderBy('enrollment_date', 'DESC')
-    ->findAll();
+        return $this->where('user_id', $user_id)
+                    ->join('courses', 'courses.id = enrollments.course_id')
+                    ->select('courses.id, courses.course_title, courses.description')
+                    ->findAll();
     }
 
-
     /**
-    * Checks duplicate enrollment
-    */
-    public function isAlreadyEnrolled($user_id, $course_id)
+     * Check if a user is already enrolled
+     */
+    public function isAlreadyEnrolled(int $user_id, int $course_id)
     {
-    return (bool) $this->where(['user_id' => $user_id, 'course_id' => $course_id])->first();
+        return $this->where('user_id', $user_id)
+                    ->where('course_id', $course_id)
+                    ->first() ? true : false;
     }
 }
