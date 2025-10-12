@@ -2,94 +2,91 @@
 
 namespace App\Controllers;
 
-use App\Models\EnrollmentModel;
+use App\Controllers\BaseController;
 use App\Models\CourseModel;
+use App\Models\EnrollmentModel;
+use CodeIgniter\HTTP\Response;
 
 class Course extends BaseController
 {
-    protected $enrollmentModel;
     protected $courseModel;
+    protected $enrollmentModel;
     protected $session;
 
     public function __construct()
     {
-        $this->enrollmentModel = new EnrollmentModel();
-        $this->courseModel = new CourseModel();
+        helper(['url', 'security']);
         $this->session = session();
-        helper('url');
+        $this->courseModel = new CourseModel();
+        $this->enrollmentModel = new EnrollmentModel();
     }
 
-    // Loads the student dashboard
-    public function index()
-    {
-        $user_id = $this->session->get('user_id');
-        $username = $this->session->get('username');
-        $role = $this->session->get('role');
-
-        if (!$user_id) {
-            return redirect()->to('/login');
-        }
-
-        // Get enrolled courses
-        $enrolledCourses = $this->enrollmentModel->getUserEnrollments($user_id);
-
-        // Get all courses
-        $allCourses = $this->courseModel->findAll();
-
-        // Available courses (exclude enrolled)
-        $enrolledCourseIds = array_column($enrolledCourses, 'id');
-        $availableCourses = array_filter($allCourses, function($course) use ($enrolledCourseIds) {
-            return !in_array($course['id'], $enrolledCourseIds);
-        });
-
-        $data = [
-            'username' => $username,
-            'role' => $role,
-            'enrolledCourses' => $enrolledCourses,
-            'availableCourses' => $availableCourses
-        ];
-
-        return view('authdashboard', $data);
-    }
-
-    // AJAX enrollment
+    /**
+     * AJAX handler to enroll the logged in user in a course
+     */
     public function enroll()
     {
-        if (! $this->request->isAJAX()) {
-            return $this->response->setStatusCode(400)
-                                  ->setJSON(['status' => 'error', 'message' => 'Invalid request']);
+        // Only accept POST requests
+        if ($this->request->getMethod() !== 'post') {
+            return $this->response->setStatusCode(405)->setJSON(['status' => 'error', 'message' => 'Method not allowed']);
         }
 
+        // Check login (use session user_id)
         $user_id = $this->session->get('user_id');
-        if (!$user_id) {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'User not logged in']);
+        if (empty($user_id)) {
+            return $this->response->setStatusCode(401)->setJSON(['status' => 'error', 'message' => 'Unauthorized']);
         }
 
+        // Validate course_id
         $course_id = $this->request->getPost('course_id');
-        $course_title = $this->request->getPost('course_title') ?? 'Course';
+        if (!is_numeric($course_id)) {
+            return $this->response->setStatusCode(400)->setJSON(['status' => 'error', 'message' => 'Invalid course id']);
+        }
+        $course_id = (int)$course_id;
 
-        if (!$course_id) {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Course ID is required']);
+        // Check course exists
+        $course = $this->courseModel->find($course_id);
+        if (!$course) {
+            return $this->response->setStatusCode(404)->setJSON(['status' => 'error', 'message' => 'Course not found']);
         }
 
+        // Prevent duplicate enrollment
         if ($this->enrollmentModel->isAlreadyEnrolled($user_id, $course_id)) {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'You are already enrolled']);
+            return $this->response->setStatusCode(409)->setJSON(['status' => 'error', 'message' => 'Already enrolled']);
         }
 
+        // Insert enrollment
         $data = [
             'user_id' => $user_id,
             'course_id' => $course_id,
-            'enrollment_date' => date('Y-m-d H:i:s')
+            'enrollment_date' => date('Y-m-d H:i:s'),
         ];
 
-        if ($this->enrollmentModel->enrollUser($data)) {
-            return $this->response->setJSON([
-                'status' => 'success',
-                'message' => 'Enrollment successful',
-                'course_title' => $course_title
-            ]);
-        } else {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Enrollment failed']);
+        $insertId = $this->enrollmentModel->enrollUser($data);
+
+        if ($insertId === false) {
+            return $this->response->setStatusCode(500)->setJSON(['status' => 'error', 'message' => 'Failed to enroll']);
         }
+
+        // Return success + optionally return inserted row or updated enrolled list
+        // Also provide a fresh CSRF hash for AJAX client to update (if CSRF is enabled)
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Enrolled successfully',
+            'enrollment' => [
+                'id' => $insertId,
+                'course_id' => $course_id,
+                'course_name' => $course['course_name'] ?? null,
+                'enrollment_date' => date('Y-m-d H:i:s'),
+            ],
+            'csrfHash' => csrf_hash() // client can update token after each AJAX response
+        ]);
+    }
+
+    // Optional: serve available courses page
+    public function index()
+    {
+        $data['courses'] = $this->courseModel->findAll();
+        echo view('dashboard', $data);
     }
 }

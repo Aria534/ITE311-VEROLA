@@ -1,27 +1,33 @@
-<?php
-
-namespace App\Models;
+<?php namespace App\Models;
 
 use CodeIgniter\Model;
 
 class CourseModel extends Model
 {
-    protected $table = 'courses';           // Your database table name
-    protected $primaryKey = 'id';           // Primary key column
+    protected $table = 'courses';
+    protected $primaryKey = 'id';
+    protected $allowedFields = ['course_title', 'description', 'instructor_id'];
 
-    // Fields allowed for insert/update
-    protected $allowedFields = [
-        'course_code',
-        'title',
-        'description',
-        'units',
-        'created_at',
-        'updated_at'
-    ];
+    public function getAvailableCourses($userId)
+    {
+        return $this->db->table('courses c')
+            ->select('c.id, c.course_title AS title, c.description')
+            ->whereNotIn('c.id', function($builder) use ($userId) {
+                return $builder->select('course_id')
+                               ->from('enrollments')
+                               ->where('user_id', $userId);
+            })
+            ->get()
+            ->getResultArray();
+    }
 
-    // Automatically manage created_at / updated_at timestamps
-    protected $useTimestamps = true;
-
-    // Optional: Define how results are returned
-    protected $returnType = 'array';
+    public function getEnrolledCourses($userId)
+    {
+        return $this->db->table('enrollments e')
+            ->select('c.course_title AS title, c.description')
+            ->join('courses c', 'c.id = e.course_id')
+            ->where('e.user_id', $userId)
+            ->get()
+            ->getResultArray();
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Database\Migrations;
 
-Use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\Migration;
 
 class CreateEnrollmentsTable extends Migration
 {
@@ -26,26 +26,31 @@ class CreateEnrollmentsTable extends Migration
                 'unsigned'   => true,
             ],
             'enrollment_date' => [
-                'type' => 'DATETIME',
-                'null' => false,
-                'default' => 'CURRENT_TIMESTAMP', // optional but recommended
+                'type'    => 'DATETIME',
+                'null'    => false,
+                'default' => null,
             ],
         ]);
 
-        // Primary key
         $this->forge->addKey('id', true);
+        $this->forge->addKey('user_id');
+        $this->forge->addKey('course_id');
 
-        // Foreign keys (ensure `users` and `courses` tables exist)
-        $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('course_id', 'courses', 'id', 'CASCADE', 'CASCADE');
-
-        // Create the table
+        // Create table
         $this->forge->createTable('enrollments', true);
+
+        // Add foreign keys (if your DB engine supports FK)
+        // Note: Some shared hosting or setups may require ALTER TABLE after create; this method works in many setups.
+        $db = \Config\Database::connect();
+        $db->query('ALTER TABLE `enrollments`
+            ADD CONSTRAINT `fk_enrollments_user`
+            FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+            ADD CONSTRAINT `fk_enrollments_course`
+            FOREIGN KEY (`course_id`) REFERENCES `courses`(`id`) ON DELETE CASCADE;');
     }
 
     public function down()
     {
-        // Drops the table (and its foreign keys)
         $this->forge->dropTable('enrollments', true);
     }
 }

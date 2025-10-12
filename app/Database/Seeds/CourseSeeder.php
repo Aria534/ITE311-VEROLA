@@ -10,20 +10,24 @@ class CourseSeeder extends Seeder
     {
         $data = [
             [
-                'course_title' => 'Introduction to Programming',
-                'description'  => 'Learn the basics of coding using Python and logic building.',
+                'course_title'         => 'Introduction to Programming',
+                'description'   => 'Learn the basics of coding using Python and logic building.',
+                'instructor_id' => 1,
             ],
             [
-                'course_title' => 'Database Management Systems',
-                'description'  => 'Understand relational databases and SQL fundamentals.',
+                'course_title'         => 'Database Management Systems',
+                'description'   => 'Understand relational databases and SQL fundamentals.',
+                'instructor_id' => 1,
             ],
             [
-                'course_title' => 'Web Development Fundamentals',
-                'description'  => 'Build and design basic websites using HTML, CSS, and JavaScript.',
+                'course_title'         => 'Web Development Fundamentals',
+                'description'   => 'Build and design basic websites using HTML, CSS, and JavaScript.',
+                'instructor_id' => 1,
             ],
             [
-                'course_title' => 'Data Structures and Algorithms',
-                'description'  => 'Learn how to organize and optimize data efficiently.',
+                'course_title'         => 'Data Structures and Algorithms',
+                'description'   => 'Learn how to organize and optimize data efficiently.',
+                'instructor_id' => 1,
             ],
         ];
 
