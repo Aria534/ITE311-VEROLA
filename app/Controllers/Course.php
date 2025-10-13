@@ -2,10 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Models\CourseModel;
 use App\Models\EnrollmentModel;
-use CodeIgniter\HTTP\Response;
+use CodeIgniter\Controller;
 
 class Course extends BaseController
 {
@@ -15,78 +14,46 @@ class Course extends BaseController
 
     public function __construct()
     {
-        helper(['url', 'security']);
-        $this->session = session();
         $this->courseModel = new CourseModel();
         $this->enrollmentModel = new EnrollmentModel();
+        $this->session = session();
+        helper(['url', 'form']);
     }
 
-    /**
-     * AJAX handler to enroll the logged in user in a course
-     */
+    // ===============================
+    // Enroll in a course (AJAX)
+    // ===============================
     public function enroll()
     {
-        // Only accept POST requests
-        if ($this->request->getMethod() !== 'post') {
-            return $this->response->setStatusCode(405)->setJSON(['status' => 'error', 'message' => 'Method not allowed']);
+        if (! $this->request->isAJAX() && $this->request->getMethod() !== 'post') {
+            return $this->response->setStatusCode(400)->setJSON(['success' => false, 'message' => 'Invalid request']);
         }
 
-        // Check login (use session user_id)
-        $user_id = $this->session->get('user_id');
-        if (empty($user_id)) {
-            return $this->response->setStatusCode(401)->setJSON(['status' => 'error', 'message' => 'Unauthorized']);
-        }
+        $userId = $this->session->get('user_id');
+        $courseId = $this->request->getPost('course_id');
 
-        // Validate course_id
-        $course_id = $this->request->getPost('course_id');
-        if (!is_numeric($course_id)) {
-            return $this->response->setStatusCode(400)->setJSON(['status' => 'error', 'message' => 'Invalid course id']);
-        }
-        $course_id = (int)$course_id;
+        // Check if already enrolled
+        $exists = $this->enrollmentModel
+            ->where('user_id', $userId)
+            ->where('course_id', $courseId)
+            ->first();
 
-        // Check course exists
-        $course = $this->courseModel->find($course_id);
-        if (!$course) {
-            return $this->response->setStatusCode(404)->setJSON(['status' => 'error', 'message' => 'Course not found']);
-        }
-
-        // Prevent duplicate enrollment
-        if ($this->enrollmentModel->isAlreadyEnrolled($user_id, $course_id)) {
-            return $this->response->setStatusCode(409)->setJSON(['status' => 'error', 'message' => 'Already enrolled']);
+        if ($exists) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Already enrolled in this course.']);
         }
 
         // Insert enrollment
-        $data = [
-            'user_id' => $user_id,
-            'course_id' => $course_id,
-            'enrollment_date' => date('Y-m-d H:i:s'),
-        ];
-
-        $insertId = $this->enrollmentModel->enrollUser($data);
-
-        if ($insertId === false) {
-            return $this->response->setStatusCode(500)->setJSON(['status' => 'error', 'message' => 'Failed to enroll']);
-        }
-
-        // Return success + optionally return inserted row or updated enrolled list
-        // Also provide a fresh CSRF hash for AJAX client to update (if CSRF is enabled)
-        return $this->response->setJSON([
-            'status' => 'success',
-            'message' => 'Enrolled successfully',
-            'enrollment' => [
-                'id' => $insertId,
-                'course_id' => $course_id,
-                'course_name' => $course['course_name'] ?? null,
-                'enrollment_date' => date('Y-m-d H:i:s'),
-            ],
-            'csrfHash' => csrf_hash() // client can update token after each AJAX response
+        $this->enrollmentModel->insert([
+            'user_id' => $userId,
+            'course_id' => $courseId,
         ]);
-    }
 
-    // Optional: serve available courses page
-    public function index()
-    {
-        $data['courses'] = $this->courseModel->findAll();
-        echo view('dashboard', $data);
+        // Get course title for success message
+        $course = $this->courseModel->find($courseId);
+
+        return $this->response->setJSON([
+            'success' => true,
+            'course_title' => $course['course_name'] ?? 'Unknown Course',
+        ]);
     }
 }

@@ -1,33 +1,32 @@
-<?php namespace App\Models;
+<?php
+
+namespace App\Models;
 
 use CodeIgniter\Model;
 
 class CourseModel extends Model
 {
-    protected $table = 'courses';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['course_title', 'description', 'instructor_id'];
+    protected $table            = 'courses';
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
 
-    public function getAvailableCourses($userId)
-    {
-        return $this->db->table('courses c')
-            ->select('c.id, c.course_title AS title, c.description')
-            ->whereNotIn('c.id', function($builder) use ($userId) {
-                return $builder->select('course_id')
-                               ->from('enrollments')
-                               ->where('user_id', $userId);
-            })
-            ->get()
-            ->getResultArray();
-    }
+    protected $allowedFields    = [
+        'course_name',
+        'description',
+        'instructor_id',
+        'created_at',
+        'updated_at'
+    ];
 
-    public function getEnrolledCourses($userId)
+    protected $useTimestamps = true;
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+
+    // Optional: Get course with instructor info (joins with users table)
+    public function getCourseWithInstructor()
     {
-        return $this->db->table('enrollments e')
-            ->select('c.course_title AS title, c.description')
-            ->join('courses c', 'c.id = e.course_id')
-            ->where('e.user_id', $userId)
-            ->get()
-            ->getResultArray();
+        return $this->select('courses.*, users.username as instructor_name')
+                    ->join('users', 'users.id = courses.instructor_id', 'left')
+                    ->findAll();
     }
 }
