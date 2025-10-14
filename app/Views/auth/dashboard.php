@@ -18,98 +18,102 @@
       <?php if ($role === 'student'): ?>
         <!-- ================= STUDENT DASHBOARD ================= -->
 
-        <!-- Quick Action Cards -->
-        <div class="col-md-3 mb-4">
-          <div class="card text-center shadow-sm border-0 h-100">
-            <div class="card-body">
-              <i class="bi bi-journal-check fs-1 text-primary mb-3"></i>
-              <h5 class="card-title">My Grades</h5>
-              <p class="text-muted small">View your grades for completed courses.</p>
-              <a href="<?= site_url('student/grades') ?>" class="btn btn-outline-primary btn-sm">View Grades</a>
+        <!-- ================= QUICK ACTION CARDS ================= -->
+        <div class="row">
+          <!-- My Grades -->
+          <div class="col-md-3 mb-4">
+            <div class="card text-center shadow-sm border-0 h-100">
+              <div class="card-body">
+                <i class="bi bi-journal-check fs-1 text-primary mb-3"></i>
+                <h5 class="card-title fw-semibold">My Grades</h5>
+                <p class="text-muted small mb-3">View your grades for completed courses.</p>
+                <a href="<?= site_url('student/grades') ?>" class="btn btn-outline-primary btn-sm">View Grades</a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-md-3 mb-4">
-          <div class="card text-center shadow-sm border-0 h-100">
-            <div class="card-body">
-              <i class="bi bi-file-earmark-text fs-1 text-warning mb-3"></i>
-              <h5 class="card-title">Assignments</h5>
-              <p class="text-muted small">Check your upcoming assignments.</p>
-              <a href="<?= site_url('student/assignments') ?>" class="btn btn-outline-warning btn-sm">View</a>
+          <!-- Assignments -->
+          <div class="col-md-3 mb-4">
+            <div class="card text-center shadow-sm border-0 h-100">
+              <div class="card-body">
+                <i class="bi bi-file-earmark-text fs-1 text-warning mb-3"></i>
+                <h5 class="card-title fw-semibold">Assignments</h5>
+                <p class="text-muted small mb-3">Check your upcoming assignments.</p>
+                <a href="<?= site_url('student/assignments') ?>" class="btn btn-outline-warning btn-sm">View</a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-md-3 mb-4">
-          <div class="card text-center shadow-sm border-0 h-100">
-            <div class="card-body">
-              <i class="bi bi-calendar3 fs-1 text-success mb-3"></i>
-              <h5 class="card-title">Calendar</h5>
-              <p class="text-muted small">See your schedule and important dates.</p>
-              <a href="<?= site_url('student/calendar') ?>" class="btn btn-outline-success btn-sm">Open</a>
+          <!-- Calendar -->
+          <div class="col-md-3 mb-4">
+            <div class="card text-center shadow-sm border-0 h-100">
+              <div class="card-body">
+                <i class="bi bi-calendar3 fs-1 text-success mb-3"></i>
+                <h5 class="card-title fw-semibold">Calendar</h5>
+                <p class="text-muted small mb-3">See your schedule and important dates.</p>
+                <a href="<?= site_url('student/calendar') ?>" class="btn btn-outline-success btn-sm">Open</a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-md-3 mb-4">
-          <div class="card text-center shadow-sm border-0 h-100">
-            <div class="card-body">
-              <i class="bi bi-clipboard-check fs-1 text-danger mb-3"></i>
-              <h5 class="card-title">Attendance</h5>
-              <p class="text-muted small">Track your attendance.</p>
-              <a href="<?= site_url('student/attendance') ?>" class="btn btn-outline-danger btn-sm">View</a>
+          <!-- Attendance -->
+          <div class="col-md-3 mb-4">
+            <div class="card text-center shadow-sm border-0 h-100">
+              <div class="card-body">
+                <i class="bi bi-clipboard-check fs-1 text-danger mb-3"></i>
+                <h5 class="card-title fw-semibold">Attendance</h5>
+                <p class="text-muted small mb-3">Track your attendance.</p>
+                <a href="<?= site_url('student/attendance') ?>" class="btn btn-outline-danger btn-sm">View</a>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- ================= ENROLLED COURSES ================= -->
-<div class="col-12 mt-5">
-  <h4 class="fw-bold mb-3">Enrolled Courses</h4>
-  <ul id="enrolledList" class="list-group">
-    <?php if (!empty($enrolledCourses)): ?>
-      <?php foreach ($enrolledCourses as $ec): ?>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <?= esc($ec['course_name']) ?>
-          <span class="badge bg-primary rounded-pill">Enrolled</span>
-        </li>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <li class="list-group-item text-center text-muted py-4">
-        <i class="bi bi-book fs-2 d-block mb-2 text-secondary"></i>
-        You haven't enrolled in any courses yet.<br>
-        <span class="text-primary fw-semibold">Start by choosing from the available courses below!</span>
-      </li>
-    <?php endif; ?>
-  </ul>
-</div>
+        <div class="mt-5">
+          <h4 class="fw-bold mb-3">Enrolled Courses</h4>
+          <ul id="enrolledList" class="list-group">
+            <?php if (!empty($enrolledCourses)): ?>
+              <?php foreach ($enrolledCourses as $ec): ?>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <?= esc($ec['course_name']) ?>
+                  <span class="badge bg-primary rounded-pill">Enrolled</span>
+                </li>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <li class="list-group-item text-center text-muted py-4">
+                <i class="bi bi-book fs-2 d-block mb-2 text-secondary"></i>
+                You haven't enrolled in any courses yet.<br>
+                <span class="text-primary fw-semibold">Start by choosing from the available courses below!</span>
+              </li>
+            <?php endif; ?>
+          </ul>
+        </div>
 
-<!-- ================= AVAILABLE COURSES ================= -->
-<div class="col-12 mt-5">
-  <h4 class="fw-bold mb-3">Available Courses</h4>
-  <ul id="availableList" class="list-group">
-    <?php if (!empty($availableCourses)): ?>
-      <?php foreach ($availableCourses as $course): ?>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <?= esc($course['course_name']) ?>
-          <button 
-            class="btn btn-sm btn-outline-success enroll-btn" 
-            data-course-id="<?= esc($course['id']) ?>">
-            Enroll
-          </button>
-        </li>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <li class="list-group-item text-center text-muted py-4">
-        <i class="bi bi-plus-circle fs-2 d-block mb-2 text-secondary"></i>
-        No courses available at the moment.<br>
-        <span class="text-secondary">Please check back later.</span>
-      </li>
-    <?php endif; ?>
-  </ul>
-</div>
-
-
+        <!-- ================= AVAILABLE COURSES ================= -->
+        <div class="mt-5 mb-5">
+          <h4 class="fw-bold mb-3">Available Courses</h4>
+          <ul id="availableList" class="list-group">
+            <?php if (!empty($availableCourses)): ?>
+              <?php foreach ($availableCourses as $course): ?>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <?= esc($course['course_name']) ?>
+                  <button 
+                    class="btn btn-sm btn-outline-success enroll-btn"
+                    data-course-id="<?= esc($course['id']) ?>">
+                    Enroll
+                  </button>
+                </li>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <li class="list-group-item text-center text-muted py-4">
+                <i class="bi bi-plus-circle fs-2 d-block mb-2 text-secondary"></i>
+                No courses available at the moment.<br>
+                <span class="text-secondary">Please check back later.</span>
+              </li>
+            <?php endif; ?>
+          </ul>
+        </div>
       <?php endif; ?>
 
       <!-- ================= TEACHER & ADMIN SECTIONS (Optional) ================= -->
@@ -138,7 +142,7 @@ $(document).ready(function() {
         // ✅ Show success alert
         $('#alertPlaceholder').html(`
           <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-            Successfully enrolled in <strong>${response.course_title}</strong>!
+            Successfully enrolled in <strong>${response.course_name}</strong>!
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
           </div>
         `);
@@ -152,7 +156,7 @@ $(document).ready(function() {
         // ✅ Add to enrolled list dynamically
         $('#enrolledList').append(`
           <li class="list-group-item d-flex justify-content-between align-items-center">
-            ${response.course_title}
+            ${response.course_name}
             <span class="badge bg-primary rounded-pill">Enrolled</span>
           </li>
         `);

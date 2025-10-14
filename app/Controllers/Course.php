@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Models\CourseModel;
 use App\Models\EnrollmentModel;
-use CodeIgniter\Controller;
 
 class Course extends BaseController
 {
@@ -25,35 +24,70 @@ class Course extends BaseController
     // ===============================
     public function enroll()
     {
+        // ✅ Allow only AJAX or POST requests
         if (! $this->request->isAJAX() && $this->request->getMethod() !== 'post') {
-            return $this->response->setStatusCode(400)->setJSON(['success' => false, 'message' => 'Invalid request']);
+            return $this->response->setStatusCode(400)
+                ->setJSON([
+                    'success' => false,
+                    'message' => 'Invalid request type.'
+                ]);
         }
 
+        // ✅ Ensure user is logged in
         $userId = $this->session->get('user_id');
-        $courseId = $this->request->getPost('course_id');
+        if (! $userId) {
+            return $this->response->setStatusCode(401)
+                ->setJSON([
+                    'success' => false,
+                    'message' => 'You must be logged in to enroll.'
+                ]);
+        }
 
-        // Check if already enrolled
+        // ✅ Get the course ID from POST
+        $courseId = $this->request->getPost('course_id');
+        if (empty($courseId)) {
+            return $this->response->setStatusCode(400)
+                ->setJSON([
+                    'success' => false,
+                    'message' => 'Course ID is required.'
+                ]);
+        }
+
+        // ✅ Validate if the course actually exists
+        $course = $this->courseModel->find($courseId);
+        if (! $course) {
+            return $this->response->setStatusCode(404)
+                ->setJSON([
+                    'success' => false,
+                    'message' => 'Course not found.'
+                ]);
+        }
+
+        // ✅ Check if the user is already enrolled
         $exists = $this->enrollmentModel
             ->where('user_id', $userId)
             ->where('course_id', $courseId)
             ->first();
 
         if ($exists) {
-            return $this->response->setJSON(['success' => false, 'message' => 'Already enrolled in this course.']);
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'You are already enrolled in "' . $course['course_name'] . '".'
+            ]);
         }
 
-        // Insert enrollment
+        // ✅ Enroll the user in the course
         $this->enrollmentModel->insert([
             'user_id' => $userId,
             'course_id' => $courseId,
+            'enrolled_at' => date('Y-m-d H:i:s') // Optional: add timestamp
         ]);
 
-        // Get course title for success message
-        $course = $this->courseModel->find($courseId);
-
+        // ✅ Send success response
         return $this->response->setJSON([
             'success' => true,
-            'course_title' => $course['course_name'] ?? 'Unknown Course',
+            'message' => 'Enrollment successful! You have been enrolled in "' . $course['course_name'] . '".',
+            'course_name' => $course['course_name']
         ]);
     }
 }
