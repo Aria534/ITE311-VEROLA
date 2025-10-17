@@ -76,11 +76,42 @@
 
 <div class="announcement-wrapper">
     <div class="announcement-header">
-        <i class="bi bi-broadcast-pin"></i>
+        <i class="bi bi-megaphone-fill"></i>
         <h3>Latest Announcements</h3>
     </div>
 
     <div class="announcement-body">
+        <?php 
+        // 🔹 Temporary mock data (for display purposes)
+        $announcements = [
+            [
+                'title' => 'System Maintenance Notice',
+                'content' => 'Our system will undergo scheduled maintenance on October 20, 2025 from 12:00 AM to 3:00 AM. Please save your work before that time.',
+                'created_at' => '2025-10-15 09:30:00'
+            ],
+            [
+                'title' => 'New Library Books Available',
+                'content' => 'The library has added over 200 new titles in Computer Science, Literature, and History. Visit the library or browse the online catalog!',
+                'created_at' => '2025-10-14 14:15:00'
+            ],
+            [
+                'title' => 'Midterm Exam Schedule Released',
+                'content' => 'Midterm exams will begin on October 21, 2025. Check your student portal for your personalized exam schedule.',
+                'created_at' => '2025-10-12 11:45:00'
+            ],
+            [
+                'title' => 'Campus Clean-Up Drive',
+                'content' => 'Join us for a campus-wide clean-up activity on October 25. Volunteers will receive community service hours.',
+                'created_at' => '2025-10-10 08:00:00'
+            ],
+            [
+                'title' => 'Seminar: The Future of AI in Education',
+                'content' => 'All students are invited to attend a seminar on AI innovations in learning, held at the Tech Hall on October 19, 2:00 PM.',
+                'created_at' => '2025-10-09 16:20:00'
+            ]
+        ];
+        ?>
+
         <?php if (!empty($announcements)): ?>
             <?php foreach ($announcements as $announcement): ?>
                 <div class="announcement-item">
