@@ -7,14 +7,17 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #eef2f7, #f9fafc);
+            background: linear-gradient(135deg, #eef6ff, #f9fbff);
             font-family: "Poppins", sans-serif;
             min-height: 100vh;
+            color: #000; /* ✅ Make all default text black */
         }
+
         .announcement-wrapper {
             max-width: 1000px;
             margin: 60px auto;
         }
+
         .announcement-header {
             background: #0d6efd;
             color: #fff;
@@ -24,51 +27,68 @@
             align-items: center;
             gap: 12px;
         }
+
         .announcement-header i {
             font-size: 2rem;
+            color: #fff;
         }
+
         .announcement-header h3 {
             margin: 0;
             font-weight: 600;
+            color: #fff;
         }
+
         .announcement-body {
-            background: #fff;
+            background: #ffffff;
             border-radius: 0 0 12px 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
             padding: 30px;
         }
+
         .announcement-item {
             border-left: 4px solid #0d6efd;
-            background: #f8faff;
+            background: #f0f6ff;
             border-radius: 8px;
             padding: 15px 20px;
             margin-bottom: 15px;
             transition: all 0.3s ease;
         }
+
         .announcement-item:hover {
             transform: translateX(5px);
-            background: #f1f6ff;
+            background: #e5f0ff;
         }
+
         .announcement-item h5 {
-            color: #0d6efd;
+            color: #000; /* ✅ Title font is black */
             font-weight: 600;
         }
+
         .announcement-item p {
-            color: #444;
+            color: #000; /* ✅ Content font is black */
             margin-bottom: 5px;
         }
+
         .announcement-date {
             font-size: 0.85rem;
-            color: #6c757d;
+            color: #000; /* ✅ Date text also black */
         }
+
+        .announcement-date i {
+            color: #0d6efd;
+            margin-right: 4px;
+        }
+
         .no-announcement {
             text-align: center;
             padding: 40px;
-            color: #6c757d;
+            color: #000; /* ✅ Text black */
         }
+
         .no-announcement i {
             font-size: 2rem;
-            color: #adb5bd;
+            color: #0d6efd;
         }
     </style>
 </head>
@@ -104,11 +124,6 @@
                 'content' => 'Join us for a campus-wide clean-up activity on October 25. Volunteers will receive community service hours.',
                 'created_at' => '2025-10-10 08:00:00'
             ],
-            [
-                'title' => 'Seminar: The Future of AI in Education',
-                'content' => 'All students are invited to attend a seminar on AI innovations in learning, held at the Tech Hall on October 19, 2:00 PM.',
-                'created_at' => '2025-10-09 16:20:00'
-            ]
         ];
         ?>
 
