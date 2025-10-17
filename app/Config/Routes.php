@@ -30,6 +30,14 @@ $routes->get('/student/dashboard', 'StudentController::dashboard');
 // Courses
 $routes->post('course/enroll', 'Course::enroll');
 
+$routes->get('/teacher/dashboard', 'Teacher::dashboard');
+$routes->get('/admin/dashboard', 'Admin::dashboard');
+$routes->get('/announcements', 'Announcement::index');
+
+
+
+
+
 
 
 

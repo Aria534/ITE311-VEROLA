@@ -56,35 +56,46 @@ class Auth extends BaseController
     // ======================
     // Login
     // ======================
-    public function login()
-    {
-        if ($this->request->getMethod() !== 'POST') {
-            return view('auth/login');
-        }
-
-        $email    = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
-
-        $user = $this->userModel->where('email', $email)->first();
-
-        if (! $user || ! password_verify($password, $user['password'])) {
-            return redirect()->back()
-                             ->withInput()
-                             ->with('login_error', 'Invalid email or password.');
-        }
-
-        $sessionData = [
-            'user_id'    => $user['id'],
-            'username'   => $user['username'],
-            'email'      => $user['email'],
-            'role'       => $user['role'],
-            'isLoggedIn' => true
-        ];
-
-        session()->set($sessionData);
-
-        return redirect()->to(base_url('dashboard'));
+   // ======================
+// Login
+// ======================
+public function login()
+{
+    if ($this->request->getMethod() !== 'POST') {
+        return view('auth/login');
     }
+
+    $email    = $this->request->getPost('email');
+    $password = $this->request->getPost('password');
+
+    $user = $this->userModel->where('email', $email)->first();
+
+    if (! $user || ! password_verify($password, $user['password'])) {
+        return redirect()->back()
+                         ->withInput()
+                         ->with('login_error', 'Invalid email or password.');
+    }
+
+    // ✅ Save session data
+    $sessionData = [
+        'user_id'    => $user['id'],
+        'username'   => $user['username'],
+        'email'      => $user['email'],
+        'role'       => $user['role'],
+        'isLoggedIn' => true
+    ];
+    session()->set($sessionData);
+
+    // ✅ Redirect based on role
+    switch ($user['role']) {
+        case 'admin':
+            return redirect()->to(base_url('admin/dashboard'));
+        case 'teacher':
+            return redirect()->to(base_url('teacher/dashboard'));
+        default:
+            return redirect()->to(base_url('announcements'));
+    }
+}
 
     // ======================
     // Logout
