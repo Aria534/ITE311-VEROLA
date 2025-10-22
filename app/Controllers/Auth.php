@@ -73,7 +73,7 @@ class Auth extends BaseController
                 ->with('login_error', 'Invalid email or password.');
         }
 
-        // Save session
+        // ✅ Save session data
         session()->set([
             'user_id'    => $user['id'],
             'username'   => $user['username'],
@@ -82,17 +82,8 @@ class Auth extends BaseController
             'isLoggedIn' => true
         ]);
 
-        // Redirect based on role
-        switch ($user['role']) {
-            case 'admin':
-                return redirect()->to(base_url('admin/dashboard'));
-            case 'teacher':
-                return redirect()->to(base_url('teacher/dashboard'));
-            case 'student':
-                return redirect()->to(base_url('student/dashboard'));
-            default:
-                return redirect()->to(base_url('dashboard'));
-        }
+        // ✅ Redirect to centralized dashboard
+        return redirect()->to(base_url('dashboard'));
     }
 
     // ======================
@@ -105,25 +96,28 @@ class Auth extends BaseController
     }
 
     // ======================
-    // General Dashboard
+    // Centralized Dashboard
     // ======================
     public function dashboard()
-    {
-        if (! session()->get('isLoggedIn')) {
-            return redirect()->to(base_url('login'));
-        }
-
-        $role = session()->get('role');
-
-        switch ($role) {
-            case 'admin':
-                return redirect()->to('admin/dashboard');
-            case 'teacher':
-                return redirect()->to('teacher/dashboard');
-            case 'student':
-                return redirect()->to('student/dashboard');
-            default:
-                return redirect()->to('announcements');
-        }
+{
+    if (! session()->get('isLoggedIn')) {
+        return redirect()->to(base_url('login'));
     }
+
+    $session = session();
+    $role = $session->get('role');
+    $username = $session->get('username');
+
+    $courseModel = new \App\Models\CourseModel();
+    $enrollmentModel = new \App\Models\EnrollmentModel();
+
+    $data = [
+        'username'        => $username,
+        'role'            => $role,
+        'availableCourses'=> $courseModel->findAll(),
+        'enrolledCourses' => $enrollmentModel->getUserEnrollments($session->get('user_id')),
+    ];
+
+    return view('auth/dashboard', $data);
+}
 }

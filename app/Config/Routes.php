@@ -24,12 +24,6 @@ $routes->get('/logout', 'Auth::logout');
 // General dashboard (redirects based on role)
 $routes->get('/dashboard', 'Auth::dashboard');
 
-// =======================
-// ROLE-BASED DASHBOARDS
-// =======================
-$routes->get('/admin/dashboard', 'Admin::dashboard');
-$routes->get('/teacher/dashboard', 'Teacher::dashboard');
-$routes->get('/student/dashboard', 'Student::dashboard');
 
 // =======================
 // ANNOUNCEMENTS
@@ -48,3 +42,5 @@ $routes->get('/admin/course/(:num)/upload', 'Materials::upload/$1');
 $routes->post('/admin/course/(:num)/upload', 'Materials::upload/$1');
 $routes->get('/materials/delete/(:num)', 'Materials::delete/$1');
 $routes->get('/materials/download/(:num)', 'Materials::download/$1');
+
+
