@@ -118,6 +118,9 @@ class Auth extends BaseController
         'enrolledCourses' => $enrollmentModel->getUserEnrollments($session->get('user_id')),
     ];
 
+    // 🔧 ADD THIS LINE
+    $data['course_id'] = 1; // or fetch from DB if needed
+
     return view('auth/dashboard', $data);
 }
 }
