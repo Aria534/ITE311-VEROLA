@@ -114,16 +114,149 @@
             <?php endif; ?>
           </ul>
         </div>
+
+        <div class="container mt-4">
+    <h4 class="mb-3">📚 Course Materials</h4>
+    <?php if (!empty($materials)): ?>
+        <ul class="list-group">
+            <?php foreach ($materials as $mat): ?>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <?= esc($mat['file_name']) ?>
+                    <a href="<?= base_url('materials/download/' . $mat['id']) ?>" class="btn btn-sm btn-success">
+                        <i class="bi bi-download"></i> Download
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <p>No materials available for this course yet.</p>
+    <?php endif; ?>
+</div>
+
       <?php endif; ?>
 
-      <!-- ================= TEACHER & ADMIN SECTIONS (Optional) ================= -->
       <?php if ($role === 'teacher'): ?>
-        <!-- Add teacher dashboard content here -->
-      <?php endif; ?>
+        <!-- ================= TEACHER DASHBOARD ================= -->
+        <!--TEACHER DASHBOARD-->
 
-      <?php if ($role === 'admin'): ?>
-        <!-- Add admin dashboard content here -->
+        <!-- Manage Classes -->
+        <div class="col-md-3">
+          <div class="card border-0 bg-light shadow-sm h-100 text-center">
+            <div class="card-body">
+              <div class="mb-3">
+                <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" 
+                      style="width:60px; height:60px; font-size:24px;">
+                  <i class="bi bi-people-fill" style="font-size:28px;"></i>
+                </span>
+              </div>
+              <h5 class="fw-bold mb-3">Manage Classes</h5>
+              <a href="#" class="btn btn-outline-primary btn-sm">View Classes</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grade Submissions -->
+        <div class="col-md-3">
+          <div class="card border-0 bg-light shadow-sm h-100 text-center">
+            <div class="card-body">
+              <div class="mb-3">
+                <span class="d-inline-flex justify-content-center align-items-center bg-info text-white rounded-circle" 
+                      style="width:60px; height:60px; font-size:24px;">
+                  <i class="bi bi-card-checklist" style="font-size:28px;"></i>
+                </span>
+              </div>
+              <h5 class="fw-bold mb-3">Grade Submissions</h5>
+              <a href="#" class="btn btn-outline-info btn-sm">Check Grades</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post Assignments -->
+        <div class="col-md-3">
+          <div class="card border-0 bg-light shadow-sm h-100 text-center">
+            <div class="card-body">
+              <div class="mb-3">
+                <span class="d-inline-flex justify-content-center align-items-center bg-warning text-white rounded-circle" 
+                      style="width:60px; height:60px; font-size:24px;">
+                  <i class="bi bi-upload" style="font-size:28px;"></i>
+                </span>
+              </div>
+              <h5 class="fw-bold mb-3">Post Assignments</h5>
+              <a href="#" class="btn btn-outline-warning btn-sm">Create Assignment</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="col-md-3">
+          <div class="card border-0 bg-light shadow-sm h-100 text-center">
+            <div class="card-body">
+              <div class="mb-3">
+                <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" 
+                      style="width:60px; height:60px; font-size:24px;">
+                  <i class="bi bi-calendar-event" style="font-size:28px;"></i>
+                </span>
+              </div>
+              <h5 class="fw-bold mb-3">Calendar</h5>
+              <a href="#" class="btn btn-outline-success btn-sm">Open Calendar</a>
+            </div>
+          </div>
+        </div>
+
       <?php endif; ?>
+    </div>
+
+    <?php if ($role === 'admin'): ?>
+        <!-- ================= ADMIN DASHBOARD ================= -->
+        <!-- ADMIN DASHBOARD-->
+     <div class="row g-3"> 
+  <!-- Reports -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-light shadow-sm h-100 text-center">
+      <div class="card-body">
+        <div class="mb-3">
+          <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
+            <i class="bi bi-graph-up"></i>
+          </span>
+        </div>
+        <h5 class="fw-bold mb-3">Reports</h5>
+        <a href="#" class="btn btn-outline-success btn-sm">View Reports</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-light shadow-sm h-100 text-center">
+      <div class="card-body">
+        <div class="mb-3">
+          <span class="d-inline-flex justify-content-center align-items-center bg-danger text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
+            <i class="bi bi-bar-chart"></i>
+          </span>
+        </div>
+        <h5 class="fw-bold mb-3">Analytics</h5>
+        <a href="#" class="btn btn-outline-danger btn-sm">View Analytics</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Management -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-light shadow-sm h-100 text-center">
+      <div class="card-body">
+        <div class="mb-3">
+          <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
+            <i class="bi bi-folder"></i>
+          </span>
+        </div>
+        <h5 class="fw-bold mb-3">Content Management</h5>
+        <a href="#" class="btn btn-outline-primary btn-sm">Manage Content</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<?php endif; ?>
     </div>
   </div>
 </div>

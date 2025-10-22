@@ -6,7 +6,7 @@ class Admin extends BaseController
 {
     public function dashboard()
     {
-        return view('admin_dashboard', [
+        return view('templates/admin_dashboard', [
             'username' => session()->get('username')
         ]);
     }
