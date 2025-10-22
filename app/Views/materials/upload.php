@@ -21,7 +21,7 @@
             <?php endif; ?>
 
             <!-- Upload Form -->
-            <form action="<?= base_url('materials/upload') ?>" method="post" enctype="multipart/form-data">
+            <form action="<?= base_url('admin/course/' . $courseId . '/upload') ?>" method="post" enctype="multipart/form-data">
                 <?= csrf_field() ?>
 
                 <div class="mb-3">

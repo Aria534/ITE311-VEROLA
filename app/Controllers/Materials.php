@@ -1,52 +1,40 @@
-<?php
-
 namespace App\Controllers;
 
 use App\Models\MaterialModel;
 use CodeIgniter\Controller;
 
-class Materials extends BaseController
+class Materials extends Controller
 {
-    protected $materialModel;
-
-    public function __construct()
+    public function upload($courseId)
     {
-        $this->materialModel = new MaterialModel();
-    }
+        helper(['form', 'url']);
 
-    // Show upload page (teacher)
-    public function upload()
-    {
-        return view('materials/upload');
-    }
+        // POST = upload file
+        if ($this->request->getMethod() === 'post') {
+            $file  = $this->request->getFile('file');
+            $title = $this->request->getPost('title');
 
-    // Handle actual upload
-    public function do_upload()
-    {
-        $file = $this->request->getFile('file');
-        $title = $this->request->getPost('title');
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+                $file->move('uploads/', $newName);
 
-        if ($file->isValid() && !$file->hasMoved()) {
-            $newName = $file->getRandomName();
-            $file->move('uploads/materials', $newName);
+                $model = new MaterialModel();
+                $model->insert([
+                    'course_id'  => $courseId,
+                    'file_name'  => $title,
+                    'file_path'  => 'uploads/' . $newName,
+                    'created_at' => date('Y-m-d H:i:s'),
+                ]);
 
-            $this->materialModel->save([
-                'title' => $title,
-                'filename' => $newName,
-                'filepath' => 'uploads/materials/' . $newName,
-                'uploaded_by' => session()->get('username') ?? 'Teacher',
-            ]);
+                return redirect()->to("/admin/course/{$courseId}/upload")
+                                 ->with('success', 'Material uploaded successfully!');
+            }
 
-            return redirect()->back()->with('success', 'Material uploaded successfully!');
+            return redirect()->to("/admin/course/{$courseId}/upload")
+                             ->with('error', 'Upload failed. Please try again.');
         }
 
-        return redirect()->back()->with('error', 'Failed to upload file.');
-    }
-
-    // Show all uploaded materials (student)
-    public function list()
-    {
-        $materials = $this->materialModel->orderBy('created_at', 'DESC')->findAll();
-        return view('materials/list', ['materials' => $materials]);
+        // GET = show upload page
+        return view('materials/upload', ['courseId' => $courseId]);
     }
 }
