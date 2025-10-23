@@ -17,7 +17,6 @@
     <div class="row g-4">
       <?php if ($role === 'student'): ?>
         <!-- ================= STUDENT DASHBOARD ================= -->
-
         <div class="row">
           <!-- My Grades -->
           <div class="col-md-3 mb-4">
@@ -54,31 +53,32 @@
               </div>
             </div>
           </div>
+        </div>
 
-         <div class="card shadow-sm border-0 rounded-3 p-4 mb-4">
-    <h5 class="mb-3 text-primary fw-bold">📚 View Uploaded Materials</h5>
+          <!-- Uploaded Materials -->
+        <div class="card shadow-sm border-0 rounded-3 p-4 mb-4 mt-4">
+          <h5 class="mb-3 text-primary fw-bold">📚 Downloadable Materials</h5>
 
-    <?php if (!empty($materials)): ?>
-        <ul class="list-group list-group-flush">
-            <?php foreach ($materials as $material): ?>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="bi bi-file-earmark-text text-primary me-2"></i>
-                        <?= esc($material['file_name']) ?>
-                    </div>
-                    <a href="<?= base_url($material['file_path']) ?>" target="_blank" class="btn btn-sm btn-outline-primary">
-                        View
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    <?php else: ?>
-        <p class="text-muted mb-0">No materials uploaded yet.</p>
-    <?php endif; ?>
-</div>
+          <?php if (!empty($materials)): ?>
+              <ul class="list-group list-group-flush">
+                  <?php foreach ($materials as $material): ?>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                          <div>
+                              <i class="bi bi-file-earmark-text text-primary me-2"></i>
+                              <?= esc($material['file_name']) ?>
+                          </div>
+                          <a href="<?= base_url('materials/download/' . $material['id']) ?>" class="btn btn-sm btn-outline-primary">
+                              <i class="bi bi-download"></i> Download
+                          </a>
+                      </li>
+                  <?php endforeach; ?>
+              </ul>
+          <?php else: ?>
+              <p class="text-muted mb-0">No materials uploaded yet.</p>
+          <?php endif; ?>
+        </div>
 
-
-        <!-- ================= ENROLLED COURSES ================= -->
+        <!-- Enrolled Courses -->
         <div class="mt-5">
           <h4 class="fw-bold mb-3">Enrolled Courses</h4>
           <ul id="enrolledList" class="list-group">
@@ -99,7 +99,7 @@
           </ul>
         </div>
 
-        <!-- ================= AVAILABLE COURSES ================= -->
+        <!-- Available Courses -->
         <div class="mt-5 mb-5">
           <h4 class="fw-bold mb-3">Available Courses</h4>
           <ul id="availableList" class="list-group">
@@ -123,159 +123,104 @@
             <?php endif; ?>
           </ul>
         </div>
-
       <?php endif; ?>
 
       <?php if ($role === 'teacher'): ?>
         <!-- ================= TEACHER DASHBOARD ================= -->
-        <!--TEACHER DASHBOARD-->
- <!-- Manage Classes -->
-    <div class="col-md-3">
-      <div class="card border-0 bg-white shadow-sm h-100 text-center">
-        <div class="card-body">
-          <div class="mb-3">
-            <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" 
-                  style="width:60px; height:60px;">
-              <i class="bi bi-people-fill fs-3"></i>
-            </span>
+        <div class="row g-4">
+          <div class="col-md-3">
+            <div class="card border-0 bg-white shadow-sm h-100 text-center">
+              <div class="card-body">
+                <div class="mb-3">
+                  <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" 
+                        style="width:60px; height:60px;">
+                    <i class="bi bi-people-fill fs-3"></i>
+                  </span>
+                </div>
+                <h5 class="fw-bold mb-3">Manage Classes</h5>
+                <a href="#" class="btn btn-outline-primary btn-sm">View Classes</a>
+              </div>
+            </div>
           </div>
-          <h5 class="fw-bold mb-3">Manage Classes</h5>
-          <a href="#" class="btn btn-outline-primary btn-sm">View Classes</a>
-        </div>
-      </div>
-    </div>
 
-    <!-- Grade Submissions -->
-    <div class="col-md-3">
-      <div class="card border-0 bg-white shadow-sm h-100 text-center">
-        <div class="card-body">
-          <div class="mb-3">
-            <span class="d-inline-flex justify-content-center align-items-center bg-info text-white rounded-circle" 
-                  style="width:60px; height:60px;">
-              <i class="bi bi-card-checklist fs-3"></i>
-            </span>
+          <div class="col-md-3">
+            <div class="card border-0 bg-white shadow-sm h-100 text-center">
+              <div class="card-body">
+                <div class="mb-3">
+                  <span class="d-inline-flex justify-content-center align-items-center bg-info text-white rounded-circle" 
+                        style="width:60px; height:60px;">
+                    <i class="bi bi-card-checklist fs-3"></i>
+                  </span>
+                </div>
+                <h5 class="fw-bold mb-3">Grade Submissions</h5>
+                <a href="#" class="btn btn-outline-info btn-sm">Check Grades</a>
+              </div>
+            </div>
           </div>
-          <h5 class="fw-bold mb-3">Grade Submissions</h5>
-          <a href="#" class="btn btn-outline-info btn-sm">Check Grades</a>
-        </div>
-      </div>
-    </div>
 
-    <!-- Calendar -->
-    <div class="col-md-3">
-      <div class="card border-0 bg-white shadow-sm h-100 text-center">
-        <div class="card-body">
-          <div class="mb-3">
-            <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" 
-                  style="width:60px; height:60px;">
-              <i class="bi bi-calendar-event fs-3"></i>
-            </span>
+          <div class="col-md-3">
+            <div class="card border-0 bg-white shadow-sm h-100 text-center">
+              <div class="card-body">
+                <div class="mb-3">
+                  <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" 
+                        style="width:60px; height:60px;">
+                    <i class="bi bi-calendar-event fs-3"></i>
+                  </span>
+                </div>
+                <h5 class="fw-bold mb-3">Calendar</h5>
+                <a href="#" class="btn btn-outline-success btn-sm">Open Calendar</a>
+              </div>
+            </div>
           </div>
-          <h5 class="fw-bold mb-3">Calendar</h5>
-          <a href="#" class="btn btn-outline-success btn-sm">Open Calendar</a>
         </div>
-      </div>
-    </div>
-
-  </div> <!-- end of row -->
-
-  <!-- Upload Material Section -->
-  <div class="mt-5">
-    <div class="card p-4 shadow-sm border-0">
-      <h4 class="mb-4 fw-bold text-primary">📂 Upload Learning Material</h4>
-
-      <!-- Flash messages -->
-      <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
-      <?php elseif (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
       <?php endif; ?>
 
-     <form action="<?= base_url('admin/course/' . $course_id . '/upload') ?>" method="post" enctype="multipart/form-data">
-    <?= csrf_field() ?>
-
-    <!-- Material Title -->
-    <div class="mb-3">
-        <label for="title" class="form-label fw-semibold">Material Title</label>
-        <input type="text" class="form-control" id="title" name="title" placeholder="Enter material title" required>
-    </div>
-
-    <div class="mb-3">
-        <label for="material" class="form-label fw-semibold">Select File</label>
-        <input class="form-control" type="file" name="material" id="material" required>
-    </div>
-
-    <div class="d-flex justify-content-between mt-4">
-        <!-- Back Button -->
-        <a href="<?= base_url('dashboard') ?>" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left-circle"></i> Back to Dashboard
-        </a>
-
-        <!-- Upload Button -->
-        <button type="submit" class="btn btn-primary">
-            <i class="bi bi-upload"></i> Upload Material
-        </button>
-    </div>
-</form>
-
-    </div>
-  </div>
-</div>
-
-      <?php endif; ?>
-    </div>
-
-    <?php if ($role === 'admin'): ?>
+      <?php if ($role === 'admin'): ?>
         <!-- ================= ADMIN DASHBOARD ================= -->
-        <!-- ADMIN DASHBOARD-->
-     <div class="row g-3"> 
-  <!-- Reports -->
-  <div class="col-md-4">
-    <div class="card border-0 bg-light shadow-sm h-100 text-center">
-      <div class="card-body">
-        <div class="mb-3">
-          <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
-            <i class="bi bi-graph-up"></i>
-          </span>
-        </div>
-        <h5 class="fw-bold mb-3">Reports</h5>
-        <a href="#" class="btn btn-outline-success btn-sm">View Reports</a>
-      </div>
-    </div>
-  </div>
+        <div class="row g-3"> 
+          <div class="col-md-4">
+            <div class="card border-0 bg-light shadow-sm h-100 text-center">
+              <div class="card-body">
+                <div class="mb-3">
+                  <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
+                    <i class="bi bi-graph-up"></i>
+                  </span>
+                </div>
+                <h5 class="fw-bold mb-3">Reports</h5>
+                <a href="#" class="btn btn-outline-success btn-sm">View Reports</a>
+              </div>
+            </div>
+          </div>
 
-  <!-- Analytics -->
-  <div class="col-md-4">
-    <div class="card border-0 bg-light shadow-sm h-100 text-center">
-      <div class="card-body">
-        <div class="mb-3">
-          <span class="d-inline-flex justify-content-center align-items-center bg-danger text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
-            <i class="bi bi-bar-chart"></i>
-          </span>
-        </div>
-        <h5 class="fw-bold mb-3">Analytics</h5>
-        <a href="#" class="btn btn-outline-danger btn-sm">View Analytics</a>
-      </div>
-    </div>
-  </div>
+          <div class="col-md-4">
+            <div class="card border-0 bg-light shadow-sm h-100 text-center">
+              <div class="card-body">
+                <div class="mb-3">
+                  <span class="d-inline-flex justify-content-center align-items-center bg-danger text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
+                    <i class="bi bi-bar-chart"></i>
+                  </span>
+                </div>
+                <h5 class="fw-bold mb-3">Analytics</h5>
+                <a href="#" class="btn btn-outline-danger btn-sm">View Analytics</a>
+              </div>
+            </div>
+          </div>
 
-  <!-- Content Management -->
-  <div class="col-md-4">
-    <div class="card border-0 bg-light shadow-sm h-100 text-center">
-      <div class="card-body">
-        <div class="mb-3">
-          <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
-            <i class="bi bi-folder"></i>
-          </span>
+          <div class="col-md-4">
+            <div class="card border-0 bg-light shadow-sm h-100 text-center">
+              <div class="card-body">
+                <div class="mb-3">
+                  <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
+                    <i class="bi bi-folder"></i>
+                  </span>
+                </div>
+                <h5 class="fw-bold mb-3">Content Management</h5>
+                <a href="#" class="btn btn-outline-primary btn-sm">Manage Content</a>
+              </div>
+            </div>
+          </div>
         </div>
-        <h5 class="fw-bold mb-3">Content Management</h5>
-        <a href="#" class="btn btn-outline-primary btn-sm">Manage Content</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<?php endif; ?>
+      <?php endif; ?>
     </div>
   </div>
 </div>
@@ -291,7 +236,6 @@ $(document).ready(function() {
 
     $.post("<?= site_url('course/enroll') ?>", { course_id: courseId }, function(response) {
       if (response.success) {
-        // ✅ Show success alert
         $('#alertPlaceholder').html(`
           <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
             Successfully enrolled in <strong>${response.course_name}</strong>!
@@ -299,13 +243,11 @@ $(document).ready(function() {
           </div>
         `);
 
-        // ✅ Disable button and change text
         button.prop('disabled', true)
               .text('Enrolled')
               .removeClass('btn-outline-success')
               .addClass('btn-success');
 
-        // ✅ Add to enrolled list dynamically
         $('#enrolledList').append(`
           <li class="list-group-item d-flex justify-content-between align-items-center">
             ${response.course_name}
@@ -313,7 +255,6 @@ $(document).ready(function() {
           </li>
         `);
       } else {
-        // ❌ Error alert
         $('#alertPlaceholder').html(`
           <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
             ${response.message}

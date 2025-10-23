@@ -33,7 +33,7 @@
 
         <div class="mb-3 mt-3">
           <label for="title" class="form-label fw-semibold">Material Title</label>
-          <input type="text" class="form-control" id="title" name="title" placeholder="Enter material title" required>
+          <input type="text" class="form-control" id="title" name="title" placeholder="Enter material title" value="<?= esc($course_name ?? '') ?>" required>
         </div>
 
         <div class="mb-3">
