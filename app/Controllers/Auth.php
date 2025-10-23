@@ -20,7 +20,7 @@ class Auth extends BaseController
     }
 
     // ======================
-    // Register
+    // REGISTER
     // ======================
     public function register()
     {
@@ -54,7 +54,7 @@ class Auth extends BaseController
     }
 
     // ======================
-    // Login
+    // LOGIN
     // ======================
     public function login()
     {
@@ -82,12 +82,12 @@ class Auth extends BaseController
             'isLoggedIn' => true
         ]);
 
-        // ✅ Redirect to centralized dashboard
+        // ✅ Redirect to role-based dashboard
         return redirect()->to(base_url('dashboard'));
     }
 
     // ======================
-    // Logout
+    // LOGOUT
     // ======================
     public function logout()
     {
@@ -96,9 +96,9 @@ class Auth extends BaseController
     }
 
     // ======================
-    // Centralized Dashboard
+    // DASHBOARD
     // ======================
-    public function dashboard()
+   public function dashboard()
 {
     if (! session()->get('isLoggedIn')) {
         return redirect()->to(base_url('login'));
@@ -107,19 +107,46 @@ class Auth extends BaseController
     $session = session();
     $role = $session->get('role');
     $username = $session->get('username');
+    $userId = $session->get('user_id');
 
     $courseModel = new \App\Models\CourseModel();
     $enrollmentModel = new \App\Models\EnrollmentModel();
+    $materialModel = new \App\Models\MaterialModel();
 
     $data = [
-        'username'        => $username,
-        'role'            => $role,
-        'availableCourses'=> $courseModel->findAll(),
-        'enrolledCourses' => $enrollmentModel->getUserEnrollments($session->get('user_id')),
+        'username'         => $username,
+        'role'             => $role,
+        'availableCourses' => $courseModel->findAll(),
+        'enrolledCourses'  => $enrollmentModel->getUserEnrollments($userId),
+        'materials'        => [],
+        'teacherCourses'   => [], // ✅ add this line
     ];
 
-    // 🔧 ADD THIS LINE
-    $data['course_id'] = 1; // or fetch from DB if needed
+    // ✅ Teachers and admins can see their uploaded materials
+    if (in_array($role, ['teacher', 'admin'])) {
+        $data['materials'] = $materialModel
+            ->where('uploaded_by', $userId)
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
+    }
+
+    // ✅ Students will see only materials from their enrolled courses
+    if ($role === 'student') {
+        $courseIds = array_column($data['enrolledCourses'], 'course_id');
+        if (!empty($courseIds)) {
+            $data['materials'] = $materialModel
+                ->whereIn('course_id', $courseIds)
+                ->orderBy('created_at', 'DESC')
+                ->findAll();
+        }
+    }
+
+    // ✅ Teachers: Show all available courses (not only assigned)
+    if ($role === 'teacher') {
+        $data['teacherCourses'] = $courseModel
+            ->orderBy('course_name', 'ASC')
+            ->findAll();
+    }
 
     return view('auth/dashboard', $data);
 }

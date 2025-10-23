@@ -35,12 +35,16 @@ $routes->get('/announcements', 'Announcement::index');
 // =======================
 $routes->post('course/enroll', 'Course::enroll');
 
-// =======================
-// MATERIALS (Admin Uploads)
-// =======================
+// Upload materials (Admin/Teacher)
 $routes->get('/admin/course/(:num)/upload', 'Materials::upload/$1');
 $routes->post('/admin/course/(:num)/upload', 'Materials::upload/$1');
+
+// Direct upload route (optional)
+$routes->get('/materials/upload/(:num)', 'Materials::upload/$1');
+$routes->post('/materials/upload/(:num)', 'Materials::upload/$1');
+
+// Delete material
 $routes->get('/materials/delete/(:num)', 'Materials::delete/$1');
+
+// Download material
 $routes->get('/materials/download/(:num)', 'Materials::download/$1');
-
-

@@ -55,26 +55,26 @@
           </div>
         </div>
 
-          <!-- Uploaded Materials -->
+        <!-- Uploaded Materials -->
         <div class="card shadow-sm border-0 rounded-3 p-4 mb-4 mt-4">
           <h5 class="mb-3 text-primary fw-bold">📚 Downloadable Materials</h5>
 
           <?php if (!empty($materials)): ?>
-              <ul class="list-group list-group-flush">
-                  <?php foreach ($materials as $material): ?>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                          <div>
-                              <i class="bi bi-file-earmark-text text-primary me-2"></i>
-                              <?= esc($material['file_name']) ?>
-                          </div>
-                          <a href="<?= base_url('materials/download/' . $material['id']) ?>" class="btn btn-sm btn-outline-primary">
-                              <i class="bi bi-download"></i> Download
-                          </a>
-                      </li>
-                  <?php endforeach; ?>
-              </ul>
+            <ul class="list-group list-group-flush">
+              <?php foreach ($materials as $material): ?>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <i class="bi bi-file-earmark-text text-primary me-2"></i>
+                    <?= esc($material['file_name']) ?>
+                  </div>
+                  <a href="<?= base_url('materials/download/' . $material['id']) ?>" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-download"></i> Download
+                  </a>
+                </li>
+              <?php endforeach; ?>
+            </ul>
           <?php else: ?>
-              <p class="text-muted mb-0">No materials uploaded yet.</p>
+            <p class="text-muted mb-0">No materials uploaded yet.</p>
           <?php endif; ?>
         </div>
 
@@ -107,9 +107,7 @@
               <?php foreach ($availableCourses as $course): ?>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                   <?= esc($course['course_name']) ?>
-                  <button 
-                    class="btn btn-sm btn-outline-success enroll-btn"
-                    data-course-id="<?= esc($course['id']) ?>">
+                  <button class="btn btn-sm btn-outline-success enroll-btn" data-course-id="<?= esc($course['id']) ?>">
                     Enroll
                   </button>
                 </li>
@@ -123,17 +121,16 @@
             <?php endif; ?>
           </ul>
         </div>
-      <?php endif; ?>
+      <?php endif; ?> <!-- ✅ closes student section -->
 
       <?php if ($role === 'teacher'): ?>
         <!-- ================= TEACHER DASHBOARD ================= -->
-        <div class="row g-4">
+        <div class="row g-4 mb-4">
           <div class="col-md-3">
             <div class="card border-0 bg-white shadow-sm h-100 text-center">
               <div class="card-body">
                 <div class="mb-3">
-                  <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" 
-                        style="width:60px; height:60px;">
+                  <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" style="width:60px; height:60px;">
                     <i class="bi bi-people-fill fs-3"></i>
                   </span>
                 </div>
@@ -147,8 +144,7 @@
             <div class="card border-0 bg-white shadow-sm h-100 text-center">
               <div class="card-body">
                 <div class="mb-3">
-                  <span class="d-inline-flex justify-content-center align-items-center bg-info text-white rounded-circle" 
-                        style="width:60px; height:60px;">
+                  <span class="d-inline-flex justify-content-center align-items-center bg-info text-white rounded-circle" style="width:60px; height:60px;">
                     <i class="bi bi-card-checklist fs-3"></i>
                   </span>
                 </div>
@@ -162,8 +158,7 @@
             <div class="card border-0 bg-white shadow-sm h-100 text-center">
               <div class="card-body">
                 <div class="mb-3">
-                  <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" 
-                        style="width:60px; height:60px;">
+                  <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" style="width:60px; height:60px;">
                     <i class="bi bi-calendar-event fs-3"></i>
                   </span>
                 </div>
@@ -173,16 +168,39 @@
             </div>
           </div>
         </div>
-      <?php endif; ?>
+
+        <!-- ================== COURSES & UPLOAD ================== -->
+        <div class="card shadow-sm border-0 rounded-3 p-4 mt-4">
+          <h5 class="mb-3 text-primary fw-bold">📘 Your Courses & Upload Materials</h5>
+
+          <?php if (!empty($teacherCourses)): ?>
+            <ul class="list-group list-group-flush">
+              <?php foreach ($teacherCourses as $course): ?>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <i class="bi bi-book text-primary me-2"></i>
+                    <?= esc($course['course_name']) ?>
+                  </div>
+                  <a href="<?= base_url('materials/upload/' . $course['id']) ?>" class="btn btn-sm btn-outline-warning">
+                    <i class="bi bi-upload"></i> Upload Material
+                  </a>
+                </li>
+              <?php endforeach; ?>
+            </ul>
+          <?php else: ?>
+            <p class="text-muted mb-0">No courses assigned to you yet.</p>
+          <?php endif; ?>
+        </div>
+      <?php endif; ?> <!-- ✅ closes teacher section -->
 
       <?php if ($role === 'admin'): ?>
         <!-- ================= ADMIN DASHBOARD ================= -->
-        <div class="row g-3"> 
+        <div class="row g-3">
           <div class="col-md-4">
             <div class="card border-0 bg-light shadow-sm h-100 text-center">
               <div class="card-body">
                 <div class="mb-3">
-                  <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
+                  <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" style="width:60px; height:60px;">
                     <i class="bi bi-graph-up"></i>
                   </span>
                 </div>
@@ -196,7 +214,7 @@
             <div class="card border-0 bg-light shadow-sm h-100 text-center">
               <div class="card-body">
                 <div class="mb-3">
-                  <span class="d-inline-flex justify-content-center align-items-center bg-danger text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
+                  <span class="d-inline-flex justify-content-center align-items-center bg-danger text-white rounded-circle" style="width:60px; height:60px;">
                     <i class="bi bi-bar-chart"></i>
                   </span>
                 </div>
@@ -210,7 +228,7 @@
             <div class="card border-0 bg-light shadow-sm h-100 text-center">
               <div class="card-body">
                 <div class="mb-3">
-                  <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" style="width:60px; height:60px; font-size:24px;">
+                  <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" style="width:60px; height:60px;">
                     <i class="bi bi-folder"></i>
                   </span>
                 </div>
@@ -220,7 +238,7 @@
             </div>
           </div>
         </div>
-      <?php endif; ?>
+      <?php endif; ?> <!-- ✅ closes admin section -->
     </div>
   </div>
 </div>
