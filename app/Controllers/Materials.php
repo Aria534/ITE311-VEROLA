@@ -3,33 +3,37 @@
 namespace App\Controllers;
 
 use App\Models\MaterialModel;
+use App\Models\CourseModel;
 use CodeIgniter\Controller;
 
 class Materials extends Controller
 {
+    protected $db;
     protected $helpers = ['form', 'url'];
 
+    public function __construct()
+    {
+        // ✅ Connect to the database
+        $this->db = \Config\Database::connect();
+    }
+
     /**
-     * Show upload form and handle uploads
+     * ✅ Upload Form + Handle Uploads
      */
     public function upload($course_id)
     {
         helper(['form', 'url']);
         $materialModel = new MaterialModel();
 
-        // ✅ Step 1: Check for POST request
         if ($this->request->getMethod() === 'POST') {
-
-            // ✅ Step 2: Load Validation Library
             $validation = \Config\Services::validation();
 
-            // ✅ Step 3: Configure validation rules
             $validation->setRules([
                 'material_file' => [
                     'label' => 'Material File',
                     'rules' => 'uploaded[material_file]'
                         . '|ext_in[material_file,pdf,doc,docx,ppt,pptx,zip,rar,txt,jpg,png,mp4]'
-                        . '|max_size[material_file,10240]', // 10 MB
+                        . '|max_size[material_file,10240]',
                     'errors' => [
                         'uploaded' => 'Please choose a file to upload.',
                         'ext_in'   => 'Only PDF, Word, PowerPoint, ZIP, RAR, TXT, image, or MP4 files are allowed.',
@@ -38,53 +42,57 @@ class Materials extends Controller
                 ]
             ]);
 
-            // ✅ Validate
             if (!$validation->withRequest($this->request)->run()) {
                 return redirect()->back()
                     ->with('error', implode('<br>', $validation->getErrors()))
                     ->withInput();
             }
 
-            // ✅ Step 4: Perform file upload
             $file = $this->request->getFile('material_file');
 
             if ($file->isValid() && !$file->hasMoved()) {
-                // Make sure directory exists
                 $uploadPath = FCPATH . 'uploads/materials/';
                 if (!is_dir($uploadPath)) {
                     mkdir($uploadPath, 0777, true);
                 }
 
-                // Move file
                 $newName = $file->getRandomName();
                 $file->move($uploadPath, $newName);
 
-                // ✅ Prepare data for DB
+                // ✅ Save uploaded file info to database
                 $data = [
                     'course_id'   => $course_id,
                     'file_name'   => $file->getClientName(),
                     'file_path'   => 'uploads/materials/' . $newName,
-                    'uploaded_by' => session()->get('user_id') ?? null,
+                    'uploaded_by' => session()->get('username') ?? 'Admin',
                     'created_at'  => date('Y-m-d H:i:s'),
                 ];
 
-                // ✅ Save record to DB
                 $materialModel->insert($data);
 
-                // ✅ Step 5: Flash message + redirect
+                // ✅ Redirect with success message
                 return redirect()->to('/materials/upload/' . $course_id)
-                    ->with('success', 'File uploaded successfully!');
+                    ->with('success', 'File uploaded successfully and saved to database!');
             } else {
-                return redirect()->back()->with('error', 'Failed to upload the file.');
+                return redirect()->back()->with('error', 'File upload failed.');
             }
         }
 
-        // ✅ Show upload form (GET request)
-        return view('materials/upload', ['course_id' => $course_id]);
+        // ✅ Fetch course info and materials from database
+        $courseModel = new CourseModel();
+        $course = $courseModel->find($course_id);
+        $materials = $materialModel->where('course_id', $course_id)->findAll();
+
+        // ✅ Display upload page with existing materials
+        return view('materials/upload', [
+            'course' => $course,
+            'materials' => $materials,
+            'course_id' => $course_id
+        ]);
     }
 
     /**
-     * ✅ Step 6: Display downloadable materials for students
+     * ✅ Display uploaded materials for a course
      */
     public function list($course_id)
     {
@@ -98,7 +106,7 @@ class Materials extends Controller
     }
 
     /**
-     * Delete a material record and file
+     * ✅ Delete a material (from DB + file)
      */
     public function delete($material_id)
     {
@@ -108,18 +116,18 @@ class Materials extends Controller
         if ($material) {
             $filePath = FCPATH . $material['file_path'];
             if (file_exists($filePath)) {
-                unlink($filePath); // delete file
+                unlink($filePath);
             }
 
             $materialModel->delete($material_id);
-            return redirect()->back()->with('success', 'Material deleted successfully.');
+            return redirect()->back()->with('success', 'Material deleted successfully from database.');
         }
 
         return redirect()->back()->with('error', 'Material not found.');
     }
 
     /**
-     * Download a material file
+     * ✅ Download Material
      */
     public function download($material_id)
     {
@@ -134,5 +142,6 @@ class Materials extends Controller
         }
 
         return redirect()->back()->with('error', 'File not found.');
+        
     }
 }

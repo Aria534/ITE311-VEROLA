@@ -95,10 +95,10 @@ class Auth extends BaseController
         return redirect()->to(base_url('login'));
     }
 
-    // ======================
-    // DASHBOARD
-    // ======================
-   public function dashboard()
+   // ======================
+// DASHBOARD
+// ======================
+public function dashboard()
 {
     if (! session()->get('isLoggedIn')) {
         return redirect()->to(base_url('login'));
@@ -116,10 +116,11 @@ class Auth extends BaseController
     $data = [
         'username'         => $username,
         'role'             => $role,
-        'availableCourses' => $courseModel->findAll(),
+        'availableCourses' => $courseModel->orderBy('course_name', 'ASC')->findAll(),
         'enrolledCourses'  => $enrollmentModel->getUserEnrollments($userId),
         'materials'        => [],
-        'teacherCourses'   => [], // ✅ add this line
+        'teacherCourses'   => [],
+        'adminCourses'     => [], // ✅ Added for admin
     ];
 
     // ✅ Teachers and admins can see their uploaded materials
@@ -141,13 +142,21 @@ class Auth extends BaseController
         }
     }
 
-    // ✅ Teachers: Show all available courses (not only assigned)
+    // ✅ Teachers: Show all available courses
     if ($role === 'teacher') {
         $data['teacherCourses'] = $courseModel
             ->orderBy('course_name', 'ASC')
             ->findAll();
     }
 
+    // ✅ Admin: Show all available courses (fixed variable name)
+    if ($role === 'admin') {
+        $data['adminCourses'] = $courseModel
+            ->orderBy('course_name', 'ASC')
+            ->findAll();
+    }
+
     return view('auth/dashboard', $data);
 }
+
 }

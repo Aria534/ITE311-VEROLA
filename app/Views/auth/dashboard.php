@@ -194,54 +194,84 @@
       <?php endif; ?> <!-- ✅ closes teacher section -->
 
       <?php if ($role === 'admin'): ?>
-        <!-- ================= ADMIN DASHBOARD ================= -->
-        <div class="row g-3">
-          <div class="col-md-4">
-            <div class="card border-0 bg-light shadow-sm h-100 text-center">
-              <div class="card-body">
-                <div class="mb-3">
-                  <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" style="width:60px; height:60px;">
-                    <i class="bi bi-graph-up"></i>
-                  </span>
-                </div>
-                <h5 class="fw-bold mb-3">Reports</h5>
-                <a href="#" class="btn btn-outline-success btn-sm">View Reports</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="card border-0 bg-light shadow-sm h-100 text-center">
-              <div class="card-body">
-                <div class="mb-3">
-                  <span class="d-inline-flex justify-content-center align-items-center bg-danger text-white rounded-circle" style="width:60px; height:60px;">
-                    <i class="bi bi-bar-chart"></i>
-                  </span>
-                </div>
-                <h5 class="fw-bold mb-3">Analytics</h5>
-                <a href="#" class="btn btn-outline-danger btn-sm">View Analytics</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="card border-0 bg-light shadow-sm h-100 text-center">
-              <div class="card-body">
-                <div class="mb-3">
-                  <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" style="width:60px; height:60px;">
-                    <i class="bi bi-folder"></i>
-                  </span>
-                </div>
-                <h5 class="fw-bold mb-3">Content Management</h5>
-                <a href="#" class="btn btn-outline-primary btn-sm">Manage Content</a>
-              </div>
-            </div>
-          </div>
+       <!-- ================= ADMIN DASHBOARD ================= -->
+<div class="row g-3">
+  <!-- Reports -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-light shadow-sm h-100 text-center">
+      <div class="card-body">
+        <div class="mb-3">
+          <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" style="width:60px; height:60px;">
+            <i class="bi bi-graph-up"></i>
+          </span>
         </div>
-      <?php endif; ?> <!-- ✅ closes admin section -->
+        <h5 class="fw-bold mb-3">Reports</h5>
+        <a href="#" class="btn btn-outline-success btn-sm">View Reports</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-light shadow-sm h-100 text-center">
+      <div class="card-body">
+        <div class="mb-3">
+          <span class="d-inline-flex justify-content-center align-items-center bg-danger text-white rounded-circle" style="width:60px; height:60px;">
+            <i class="bi bi-bar-chart"></i>
+          </span>
+        </div>
+        <h5 class="fw-bold mb-3">Analytics</h5>
+        <a href="#" class="btn btn-outline-danger btn-sm">View Analytics</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Management -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-light shadow-sm h-100 text-center">
+      <div class="card-body">
+        <div class="mb-3">
+          <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" style="width:60px; height:60px;">
+            <i class="bi bi-folder"></i>
+          </span>
+        </div>
+        <h5 class="fw-bold mb-3">Content Management</h5>
+        <a href="<?= site_url('admin/course/1/upload') ?>" class="btn btn-outline-primary btn-sm">
+          Manage Content
+        </a>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- ================== COURSES & UPLOAD ================== -->
+<div class="card shadow-sm border-0 rounded-3 p-4 mt-4 mb-5">
+  <h5 class="mb-3 text-primary fw-bold">📘 Manage Courses & Upload Materials</h5>
+
+  <?php if (!empty($adminCourses)): ?>
+    <ul class="list-group list-group-flush">
+      <?php foreach ($adminCourses as $course): ?>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <i class="bi bi-book text-primary me-2"></i>
+            <?= esc($course['course_name']) ?>
+          </div>
+         <a href="<?= base_url('admin/course/' . $course['id'] . '/upload') ?>" class="btn btn-sm btn-outline-warning">
+    <i class="bi bi-upload"></i> Upload Material
+</a>
+
+          </a>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  <?php else: ?>
+    <p class="text-muted mb-0">No courses available for upload.</p>
+  <?php endif; ?>
+</div>
+      <?php endif; ?> <!-- ✅ closes admin section -->
+    </div>
+  </div>
+
 
 <!-- ================= AJAX ENROLLMENT SCRIPT ================= -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
