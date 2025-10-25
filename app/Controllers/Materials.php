@@ -13,12 +13,12 @@ class Materials extends Controller
 
     public function __construct()
     {
-        // ✅ Connect to the database
+        // Connect to the database
         $this->db = \Config\Database::connect();
     }
 
     /**
-     * ✅ Upload Form + Handle Uploads
+     * Upload Form + Handle Uploads
      */
     public function upload($course_id)
     {
@@ -29,6 +29,14 @@ class Materials extends Controller
             $validation = \Config\Services::validation();
 
             $validation->setRules([
+                'material_title' => [
+                    'label' => 'Material Title',
+                    'rules' => 'required|max_length[255]',
+                    'errors' => [
+                        'required'   => 'Material title is required.',
+                        'max_length' => 'Material title must not exceed 255 characters.'
+                    ]
+                ],
                 'material_file' => [
                     'label' => 'Material File',
                     'rules' => 'uploaded[material_file]'
@@ -59,31 +67,31 @@ class Materials extends Controller
                 $newName = $file->getRandomName();
                 $file->move($uploadPath, $newName);
 
-                // ✅ Save uploaded file info to database
+                // Save uploaded file info to database
                 $data = [
-                    'course_id'   => $course_id,
-                    'file_name'   => $file->getClientName(),
-                    'file_path'   => 'uploads/materials/' . $newName,
-                    'uploaded_by' => session()->get('username') ?? 'Admin',
-                    'created_at'  => date('Y-m-d H:i:s'),
+                    'course_id'     => $course_id,
+                    'material_title'=> $this->request->getPost('material_title'),
+                    'file_name'     => $file->getClientName(),
+                    'file_path'     => 'uploads/materials/' . $newName,
+                    'uploaded_by'   => session()->get('username') ?? 'Admin',
+                    'created_at'    => date('Y-m-d H:i:s'),
                 ];
 
                 $materialModel->insert($data);
 
-                // ✅ Redirect with success message
-                return redirect()->to('/materials/upload/' . $course_id)
+                return redirect()->to('/admin/course/' . $course_id . '/upload')
                     ->with('success', 'File uploaded successfully and saved to database!');
             } else {
                 return redirect()->back()->with('error', 'File upload failed.');
             }
         }
 
-        // ✅ Fetch course info and materials from database
+        // Fetch course info and materials
         $courseModel = new CourseModel();
         $course = $courseModel->find($course_id);
         $materials = $materialModel->where('course_id', $course_id)->findAll();
 
-        // ✅ Display upload page with existing materials
+        // Display upload page
         return view('materials/upload', [
             'course' => $course,
             'materials' => $materials,
@@ -92,21 +100,7 @@ class Materials extends Controller
     }
 
     /**
-     * ✅ Display uploaded materials for a course
-     */
-    public function list($course_id)
-    {
-        $materialModel = new MaterialModel();
-        $materials = $materialModel->where('course_id', $course_id)->findAll();
-
-        return view('materials/list', [
-            'materials' => $materials,
-            'course_id' => $course_id
-        ]);
-    }
-
-    /**
-     * ✅ Delete a material (from DB + file)
+     * Delete a material (from DB + file)
      */
     public function delete($material_id)
     {
@@ -120,14 +114,14 @@ class Materials extends Controller
             }
 
             $materialModel->delete($material_id);
-            return redirect()->back()->with('success', 'Material deleted successfully from database.');
+            return redirect()->back()->with('success', 'Material deleted successfully.');
         }
 
         return redirect()->back()->with('error', 'Material not found.');
     }
 
     /**
-     * ✅ Download Material
+     * Download Material
      */
     public function download($material_id)
     {
@@ -142,6 +136,5 @@ class Materials extends Controller
         }
 
         return redirect()->back()->with('error', 'File not found.');
-        
     }
 }

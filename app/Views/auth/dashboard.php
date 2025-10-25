@@ -124,77 +124,78 @@
       <?php endif; ?> <!-- ✅ closes student section -->
 
       <?php if ($role === 'teacher'): ?>
-        <!-- ================= TEACHER DASHBOARD ================= -->
-        <div class="row g-4 mb-4">
-          <div class="col-md-3">
-            <div class="card border-0 bg-white shadow-sm h-100 text-center">
-              <div class="card-body">
-                <div class="mb-3">
-                  <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" style="width:60px; height:60px;">
-                    <i class="bi bi-people-fill fs-3"></i>
-                  </span>
-                </div>
-                <h5 class="fw-bold mb-3">Manage Classes</h5>
-                <a href="#" class="btn btn-outline-primary btn-sm">View Classes</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-3">
-            <div class="card border-0 bg-white shadow-sm h-100 text-center">
-              <div class="card-body">
-                <div class="mb-3">
-                  <span class="d-inline-flex justify-content-center align-items-center bg-info text-white rounded-circle" style="width:60px; height:60px;">
-                    <i class="bi bi-card-checklist fs-3"></i>
-                  </span>
-                </div>
-                <h5 class="fw-bold mb-3">Grade Submissions</h5>
-                <a href="#" class="btn btn-outline-info btn-sm">Check Grades</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-3">
-            <div class="card border-0 bg-white shadow-sm h-100 text-center">
-              <div class="card-body">
-                <div class="mb-3">
-                  <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" style="width:60px; height:60px;">
-                    <i class="bi bi-calendar-event fs-3"></i>
-                  </span>
-                </div>
-                <h5 class="fw-bold mb-3">Calendar</h5>
-                <a href="#" class="btn btn-outline-success btn-sm">Open Calendar</a>
-              </div>
-            </div>
-          </div>
+       <!-- ================= TEACHER DASHBOARD ================= -->
+<div class="row g-4 mb-4">
+  <div class="col-md-3">
+    <div class="card border-0 bg-white shadow-sm h-100 text-center">
+      <div class="card-body">
+        <div class="mb-3">
+          <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" style="width:60px; height:60px;">
+            <i class="bi bi-people-fill fs-3"></i>
+          </span>
         </div>
+        <h5 class="fw-bold mb-3">Manage Classes</h5>
+        <a href="#" class="btn btn-outline-primary btn-sm">View Classes</a>
+      </div>
+    </div>
+  </div>
 
-        <!-- ================== COURSES & UPLOAD ================== -->
-        <div class="card shadow-sm border-0 rounded-3 p-4 mt-4">
-          <h5 class="mb-3 text-primary fw-bold">📘 Your Courses & Upload Materials</h5>
-
-          <?php if (!empty($teacherCourses)): ?>
-            <ul class="list-group list-group-flush">
-              <?php foreach ($teacherCourses as $course): ?>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <div>
-                    <i class="bi bi-book text-primary me-2"></i>
-                    <?= esc($course['course_name']) ?>
-                  </div>
-                  <a href="<?= base_url('materials/upload/' . $course['id']) ?>" class="btn btn-sm btn-outline-warning">
-                    <i class="bi bi-upload"></i> Upload Material
-                  </a>
-                </li>
-              <?php endforeach; ?>
-            </ul>
-          <?php else: ?>
-            <p class="text-muted mb-0">No courses assigned to you yet.</p>
-          <?php endif; ?>
+  <div class="col-md-3">
+    <div class="card border-0 bg-white shadow-sm h-100 text-center">
+      <div class="card-body">
+        <div class="mb-3">
+          <span class="d-inline-flex justify-content-center align-items-center bg-info text-white rounded-circle" style="width:60px; height:60px;">
+            <i class="bi bi-card-checklist fs-3"></i>
+          </span>
         </div>
+        <h5 class="fw-bold mb-3">Grade Submissions</h5>
+        <a href="#" class="btn btn-outline-info btn-sm">Check Grades</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card border-0 bg-white shadow-sm h-100 text-center">
+      <div class="card-body">
+        <div class="mb-3">
+          <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" style="width:60px; height:60px;">
+            <i class="bi bi-calendar-event fs-3"></i>
+          </span>
+        </div>
+        <h5 class="fw-bold mb-3">Calendar</h5>
+        <a href="#" class="btn btn-outline-success btn-sm">Open Calendar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================== COURSES & UPLOAD ================== -->
+<div class="card shadow-sm border-0 rounded-3 p-4 mt-4">
+  <h5 class="mb-3 text-primary fw-bold">📘 Your Courses & Upload Materials</h5>
+
+  <?php if (!empty($teacherCourses)): ?>
+    <ul class="list-group list-group-flush">
+      <?php foreach ($teacherCourses as $course): ?>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <i class="bi bi-book text-primary me-2"></i>
+            <?= esc($course['course_name']) ?>
+          </div>
+          <a href="<?= base_url('admin/course/' . $course['id'] . '/upload') ?>" class="btn btn-sm btn-outline-warning">
+            <i class="bi bi-upload"></i> Upload Material
+          </a>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  <?php else: ?>
+    <p class="text-muted mb-0">No courses assigned to you yet.</p>
+  <?php endif; ?>
+</div>
+
       <?php endif; ?> <!-- ✅ closes teacher section -->
 
       <?php if ($role === 'admin'): ?>
-       <!-- ================= ADMIN DASHBOARD ================= -->
+     <!-- ================= ADMIN DASHBOARD ================= -->
 <div class="row g-3">
   <!-- Reports -->
   <div class="col-md-4">
@@ -236,9 +237,7 @@
           </span>
         </div>
         <h5 class="fw-bold mb-3">Content Management</h5>
-        <a href="<?= site_url('admin/course/1/upload') ?>" class="btn btn-outline-primary btn-sm">
-          Manage Content
-        </a>
+        <p class="text-muted mb-0">Upload and manage course materials</p>
       </div>
     </div>
   </div>
@@ -256,10 +255,8 @@
             <i class="bi bi-book text-primary me-2"></i>
             <?= esc($course['course_name']) ?>
           </div>
-         <a href="<?= base_url('admin/course/' . $course['id'] . '/upload') ?>" class="btn btn-sm btn-outline-warning">
-    <i class="bi bi-upload"></i> Upload Material
-</a>
-
+          <a href="<?= base_url('admin/course/' . $course['id'] . '/upload') ?>" class="btn btn-sm btn-outline-warning">
+            <i class="bi bi-upload"></i> Upload Material
           </a>
         </li>
       <?php endforeach; ?>
@@ -268,6 +265,7 @@
     <p class="text-muted mb-0">No courses available for upload.</p>
   <?php endif; ?>
 </div>
+
       <?php endif; ?> <!-- ✅ closes admin section -->
     </div>
   </div>
