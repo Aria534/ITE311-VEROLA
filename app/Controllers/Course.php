@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\CourseModel;
 use App\Models\EnrollmentModel;
+use App\Models\NotificationModel; // 👈 add this line
 
 class Course extends BaseController
 {
@@ -80,7 +81,16 @@ class Course extends BaseController
         $this->enrollmentModel->insert([
             'user_id' => $userId,
             'course_id' => $courseId,
-            'enrolled_at' => date('Y-m-d H:i:s') // Optional: add timestamp
+            'enrolled_at' => date('Y-m-d H:i:s')
+        ]);
+
+        // ✅ Create a notification record
+        $notificationModel = new NotificationModel();
+        $notificationModel->insert([
+            'user_id' => $userId,
+            'message' => 'You have successfully enrolled in "' . esc($course['course_name']) . '".',
+            'is_read' => 0,
+            'created_at' => date('Y-m-d H:i:s')
         ]);
 
         // ✅ Send success response

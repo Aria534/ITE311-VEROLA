@@ -8,6 +8,7 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use App\Models\NotificationModel; // ✅ add this line
 
 /**
  * Class BaseController
@@ -35,13 +36,17 @@ abstract class BaseController extends Controller
      *
      * @var list<string>
      */
-    protected $helpers = [];
+    protected $helpers = ['form', 'url']; // ✅ updated to include commonly used helpers
 
     /**
      * Be sure to declare properties for any property fetch you initialized.
      * The creation of dynamic property is deprecated in PHP 8.2.
      */
     // protected $session;
+
+    // ✅ Add these new properties
+    protected $notificationModel;
+    protected $unreadCount = 0;
 
     /**
      * @return void
@@ -54,5 +59,21 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = service('session');
+        $this->notificationModel = new NotificationModel(); // ✅ load model
+
+        // ✅ Get logged-in user's ID from session
+        $userId = session()->get('id');
+
+        // ✅ Count unread notifications if user is logged in
+        if ($userId) {
+            $this->unreadCount = $this->notificationModel->getUnreadCount($userId);
+        }
+    }
+
+    // ✅ Helper method to include notification count in all views
+    protected function withNotifications(array $data = [])
+    {
+        $data['unreadCount'] = $this->unreadCount;
+        return $data;
     }
 }
