@@ -26,7 +26,7 @@ class Course extends BaseController
     public function enroll()
     {
         // ✅ Allow only AJAX or POST requests
-        if (! $this->request->isAJAX() && $this->request->getMethod() !== 'post') {
+        if (!$this->request->isAJAX() && $this->request->getMethod() !== 'POST') {
             return $this->response->setStatusCode(400)
                 ->setJSON([
                     'success' => false,
@@ -36,7 +36,7 @@ class Course extends BaseController
 
         // ✅ Ensure user is logged in
         $userId = $this->session->get('user_id');
-        if (! $userId) {
+        if (!$userId) {
             return $this->response->setStatusCode(401)
                 ->setJSON([
                     'success' => false,
@@ -56,7 +56,7 @@ class Course extends BaseController
 
         // ✅ Validate if the course actually exists
         $course = $this->courseModel->find($courseId);
-        if (! $course) {
+        if (!$course) {
             return $this->response->setStatusCode(404)
                 ->setJSON([
                     'success' => false,

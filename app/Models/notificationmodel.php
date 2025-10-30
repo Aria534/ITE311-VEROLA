@@ -9,34 +9,21 @@ class NotificationModel extends Model
     protected $table = 'notifications';
     protected $primaryKey = 'id';
     protected $allowedFields = ['user_id', 'message', 'is_read', 'created_at'];
-    protected $useTimestamps = false;
 
-    /**
-     * Get the count of unread notifications for a specific user.
-     */
     public function getUnreadCount($userId)
     {
-        return $this->where('user_id', $userId)
-                    ->where('is_read', 0)
-                    ->countAllResults();
+        return $this->where('user_id', $userId)->where('is_read', 0)->countAllResults();
     }
 
-    /**
-     * Get the latest notifications for a specific user.
-     */
-    public function getNotificationsForUser($userId, $limit = 5)
+    public function getNotificationsForUser($userId)
     {
         return $this->where('user_id', $userId)
                     ->orderBy('created_at', 'DESC')
-                    ->limit($limit)
-                    ->findAll();
+                    ->findAll(10); // latest 10
     }
 
-    /**
-     * Mark a specific notification as read.
-     */
-    public function markAsRead($notificationId)
+    public function markAsRead($id)
     {
-        return $this->update($notificationId, ['is_read' => 1]);
+        return $this->update($id, ['is_read' => 1]);
     }
 }

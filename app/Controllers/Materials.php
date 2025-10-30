@@ -4,137 +4,101 @@ namespace App\Controllers;
 
 use App\Models\MaterialModel;
 use App\Models\CourseModel;
+use App\Models\UserModel;
+use App\Models\EnrollmentModel;
+use App\Models\NotificationModel;
 use CodeIgniter\Controller;
 
-class Materials extends Controller
+class Materials extends BaseController
 {
-    protected $db;
-    protected $helpers = ['form', 'url'];
+    protected $materialModel;
+    protected $courseModel;
+    protected $userModel;
+    protected $enrollmentModel;
+    protected $notificationModel;
+    protected $session;
 
     public function __construct()
     {
-        // Connect to the database
-        $this->db = \Config\Database::connect();
+        $this->materialModel = new MaterialModel();
+        $this->courseModel = new CourseModel();
+        $this->userModel = new UserModel();
+        $this->enrollmentModel = new EnrollmentModel();
+        $this->notificationModel = new NotificationModel();
+        $this->session = session();
     }
 
-    /**
-     * Upload Form + Handle Uploads
-     */
-    public function upload($course_id)
+    // ✅ Display upload form
+    public function upload($courseId)
     {
-        helper(['form', 'url']);
-        $materialModel = new MaterialModel();
+        $data['course'] = $this->courseModel->find($courseId);
+        return view('materials/upload', $data);
+    }
 
-        if ($this->request->getMethod() === 'POST') {
-            $validation = \Config\Services::validation();
+    // ✅ Handle upload form submission
+    public function uploadMaterial($courseId)
+    {
+        $userId = $this->session->get('user_id');
+        $role   = $this->session->get('role'); // e.g., 'teacher', 'admin'
 
-            $validation->setRules([
-                'material_title' => [
-                    'label' => 'Material Title',
-                    'rules' => 'required|max_length[255]',
-                    'errors' => [
-                        'required'   => 'Material title is required.',
-                        'max_length' => 'Material title must not exceed 255 characters.'
-                    ]
-                ],
-                'material_file' => [
-                    'label' => 'Material File',
-                    'rules' => 'uploaded[material_file]'
-                        . '|ext_in[material_file,pdf,doc,docx,ppt,pptx,zip,rar,txt,jpg,png,mp4]'
-                        . '|max_size[material_file,10240]',
-                    'errors' => [
-                        'uploaded' => 'Please choose a file to upload.',
-                        'ext_in'   => 'Only PDF, Word, PowerPoint, ZIP, RAR, TXT, image, or MP4 files are allowed.',
-                        'max_size' => 'The file size must not exceed 10MB.',
-                    ]
-                ]
-            ]);
-
-            if (!$validation->withRequest($this->request)->run()) {
-                return redirect()->back()
-                    ->with('error', implode('<br>', $validation->getErrors()))
-                    ->withInput();
-            }
-
-            $file = $this->request->getFile('material_file');
-
-            if ($file->isValid() && !$file->hasMoved()) {
-                $uploadPath = FCPATH . 'uploads/materials/';
-                if (!is_dir($uploadPath)) {
-                    mkdir($uploadPath, 0777, true);
-                }
-
-                $newName = $file->getRandomName();
-                $file->move($uploadPath, $newName);
-
-                // Save uploaded file info to database
-                $data = [
-                    'course_id'     => $course_id,
-                    'material_title'=> $this->request->getPost('material_title'),
-                    'file_name'     => $file->getClientName(),
-                    'file_path'     => 'uploads/materials/' . $newName,
-                    'uploaded_by'   => session()->get('username') ?? 'Admin',
-                    'created_at'    => date('Y-m-d H:i:s'),
-                ];
-
-                $materialModel->insert($data);
-
-                return redirect()->to('/admin/course/' . $course_id . '/upload')
-                    ->with('success', 'File uploaded successfully and saved to database!');
-            } else {
-                return redirect()->back()->with('error', 'File upload failed.');
-            }
+        if (!$userId) {
+            return redirect()->to('/login')->with('error', 'Please log in first.');
         }
 
-        // Fetch course info and materials
-        $courseModel = new CourseModel();
-        $course = $courseModel->find($course_id);
-        $materials = $materialModel->where('course_id', $course_id)->findAll();
+        $file = $this->request->getFile('material_file');
+        if (!$file || !$file->isValid()) {
+            return redirect()->back()->with('error', 'Upload failed. Please try again.');
+        }
 
-        // Display upload page
-        return view('materials/upload', [
-            'course' => $course,
-            'materials' => $materials,
-            'course_id' => $course_id
+        $newName = $file->getRandomName();
+        $file->move('uploads/materials/', $newName);
+
+        // Save record in DB
+        $this->materialModel->insert([
+            'course_id'   => $courseId,
+            'uploaded_by' => $userId,
+            'file_name'   => $file->getClientName(),
+            'file_path'   => 'uploads/materials/' . $newName,
+            'created_at'  => date('Y-m-d H:i:s')
         ]);
+
+       // =============================== 🔔 Send Notifications ===============================
+
+// Get all students enrolled in this course
+$students = $this->enrollmentModel
+    ->select('users.id')
+    ->join('users', 'users.id = enrollments.user_id')
+    ->where('enrollments.course_id', $courseId)
+    ->findAll();
+
+foreach ($students as $student) {
+    $this->notificationModel->insert([
+        'user_id'   => $student['id'],
+        'message'   => '📚 New material has been uploaded in "' . esc($course['course_name']) . '".',
+        'is_read'   => 0,
+        'created_at'=> date('Y-m-d H:i:s')
+    ]);
+}
+
+// =====================================================================================
+
+        return redirect()->back()->with('success', 'Material uploaded and notifications sent!');
     }
 
-    /**
-     * Delete a material (from DB + file)
-     */
-    public function delete($material_id)
+    // ✅ Download file
+    public function download($id)
     {
-        $materialModel = new MaterialModel();
-        $material = $materialModel->find($material_id);
-
-        if ($material) {
-            $filePath = FCPATH . $material['file_path'];
-            if (file_exists($filePath)) {
-                unlink($filePath);
-            }
-
-            $materialModel->delete($material_id);
-            return redirect()->back()->with('success', 'Material deleted successfully.');
+        $material = $this->materialModel->find($id);
+        if (!$material) {
+            return redirect()->back()->with('error', 'File not found.');
         }
-
-        return redirect()->back()->with('error', 'Material not found.');
+        return $this->response->download($material['file_path'], null);
     }
 
-    /**
-     * Download Material
-     */
-    public function download($material_id)
+    // ✅ Delete file
+    public function delete($id)
     {
-        $materialModel = new MaterialModel();
-        $material = $materialModel->find($material_id);
-
-        if ($material) {
-            $filePath = FCPATH . $material['file_path'];
-            if (file_exists($filePath)) {
-                return $this->response->download($filePath, null);
-            }
-        }
-
-        return redirect()->back()->with('error', 'File not found.');
+        $this->materialModel->delete($id);
+        return redirect()->back()->with('success', 'Material deleted successfully.');
     }
 }

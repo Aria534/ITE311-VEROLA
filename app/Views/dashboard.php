@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,4 +13,4 @@
     <a href="<?= base_url('logout') ?>" class="btn btn-danger">Logout</a>
 </div>
 </body>
-</html>
+</html> -->

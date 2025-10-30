@@ -68,23 +68,6 @@
             <li class="nav-item"><a class="nav-link" href="<?= base_url('/courses') ?>"><i class="bi bi-book"></i> Manage Courses</a></li>
             <li class="nav-item"><a class="nav-link" href="<?= base_url('/students') ?>"><i class="bi bi-people"></i> Student List</a></li>
 
-            <!-- 🔔 Notification Dropdown -->
-            <li class="nav-item dropdown">
-              <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-bell fs-5"></i>
-                <span id="notificationBadge" class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill d-none">0</span>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" aria-labelledby="notificationDropdown" style="width: 320px;">
-                <li class="dropdown-header fw-bold text-center bg-light">Notifications</li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                  <div id="notificationList" class="p-2" style="max-height: 300px; overflow-y: auto;">
-                    <p class="text-muted text-center my-2">No notifications yet</p>
-                  </div>
-                </li>
-              </ul>
-            </li>
-
             <li class="nav-item"><a class="nav-link text-danger" href="<?= base_url('/logout') ?>"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
           </ul>
         </div>
@@ -103,23 +86,6 @@
           <ul class="navbar-nav ms-auto align-items-center">
             <li class="nav-item"><a class="nav-link" href="<?= base_url('/users') ?>"><i class="bi bi-person-gear"></i> Manage Users</a></li>
             <li class="nav-item"><a class="nav-link" href="<?= base_url('/settings') ?>"><i class="bi bi-gear"></i> System Settings</a></li>
-
-            <!-- 🔔 Notification Dropdown -->
-            <li class="nav-item dropdown">
-              <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-bell fs-5"></i>
-                <span id="notificationBadge" class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill d-none">0</span>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" aria-labelledby="notificationDropdown" style="width: 320px;">
-                <li class="dropdown-header fw-bold text-center bg-light">Notifications</li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                  <div id="notificationList" class="p-2" style="max-height: 300px; overflow-y: auto;">
-                    <p class="text-muted text-center my-2">No notifications yet</p>
-                  </div>
-                </li>
-              </ul>
-            </li>
 
             <li class="nav-item"><a class="nav-link text-danger" href="<?= base_url('/logout') ?>"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
           </ul>
@@ -156,15 +122,25 @@ $(document).ready(function() {
         list.html('<p class="text-muted text-center my-2">No notifications</p>');
       } else {
         response.notifications.forEach(n => {
-          const alertClass = n.is_read ? 'alert-secondary' : 'alert-info';
-          const html = `
-            <div class="alert ${alertClass} d-flex justify-content-between align-items-center p-2 mb-2 rounded-3">
-              <div class="me-2 flex-grow-1">${n.message}</div>
-              ${!n.is_read ? `<button class="btn btn-sm btn-outline-primary" onclick="markAsRead(${n.id})">Mark as Read</button>` : ''}
-            </div>
-          `;
-          list.append(html);
-        });
+        // Convert string "0"/"1" to boolean
+        const isRead = n.is_read == 1 || n.is_read === true;
+
+        const alertClass = isRead ? 'alert-secondary' : 'alert-info';
+        const buttonLabel = isRead ? 'Read' : 'Mark as Read';
+        const html = `
+          <div class="alert ${alertClass} d-flex justify-content-between align-items-center p-2 mb-2 rounded-3">
+            <div class="me-2 flex-grow-1">${n.message}</div>
+            <button 
+              class="btn btn-sm ${isRead ? 'btn-outline-secondary' : 'btn-outline-primary'}"
+              onclick="markAsRead(${n.id})"
+              ${isRead ? 'disabled' : ''}
+            >
+              ${buttonLabel}
+            </button>
+          </div>
+        `;
+        list.append(html);
+      });
       }
     }).fail(() => {
       console.error('❌ Failed to load notifications (check route or server).');
@@ -175,6 +151,8 @@ $(document).ready(function() {
   window.markAsRead = function(id) {
     $.post("<?= base_url('/notifications/mark_read') ?>/" + id, function(response) {
       if (response.success) loadNotifications();
+    }).fail(() => {
+      console.error('❌ Failed to mark notification as read.');
     });
   }
 
@@ -183,7 +161,6 @@ $(document).ready(function() {
   setInterval(loadNotifications, 30000);
 });
 </script>
-
 
 </body>
 </html>
