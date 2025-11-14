@@ -16,33 +16,54 @@ class Materials extends BaseController
     protected $userModel;
     protected $enrollmentModel;
     protected $notificationModel;
-    protected $session;
 
     public function __construct()
     {
-        $this->materialModel = new MaterialModel();
-        $this->courseModel = new CourseModel();
-        $this->userModel = new UserModel();
-        $this->enrollmentModel = new EnrollmentModel();
-        $this->notificationModel = new NotificationModel();
-        $this->session = session();
+        $this->materialModel      = new MaterialModel();
+        $this->courseModel        = new CourseModel();
+        $this->userModel          = new UserModel();
+        $this->enrollmentModel    = new EnrollmentModel();
+        $this->notificationModel  = new NotificationModel();
+        // ✅ Removed $this->session from constructor
     }
 
     // ✅ Display upload form
     public function upload($courseId)
     {
-        $data['course'] = $this->courseModel->find($courseId);
+        $course = $this->courseModel->find($courseId);
+        if (!$course) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Course not found');
+        }
+
+        $materials = $this->materialModel->where('course_id', $courseId)->findAll();
+
+        $data = [
+            'course_id' => $courseId,
+            'course'    => $course,
+            'materials' => $materials
+        ];
+
         return view('materials/upload', $data);
     }
 
     // ✅ Handle upload form submission
     public function uploadMaterial($courseId)
     {
-        $userId = $this->session->get('user_id');
-        $role   = $this->session->get('role'); // e.g., 'teacher', 'admin'
+        // Initialize session safely
+        $session = \Config\Services::session();
+        if (! $session->isStarted()) {
+            $session->start();
+        }
+
+        $userId = $session->get('user_id');
 
         if (!$userId) {
             return redirect()->to('/login')->with('error', 'Please log in first.');
+        }
+
+        $course = $this->courseModel->find($courseId);
+        if (!$course) {
+            return redirect()->back()->with('error', 'Course not found.');
         }
 
         $file = $this->request->getFile('material_file');
@@ -51,7 +72,7 @@ class Materials extends BaseController
         }
 
         $newName = $file->getRandomName();
-        $file->move('uploads/materials/', $newName);
+        $file->move(WRITEPATH . 'uploads/materials/', $newName);
 
         // Save record in DB
         $this->materialModel->insert([
@@ -62,25 +83,21 @@ class Materials extends BaseController
             'created_at'  => date('Y-m-d H:i:s')
         ]);
 
-       // =============================== 🔔 Send Notifications ===============================
+        // 🔔 Send notifications to enrolled students
+        $students = $this->enrollmentModel
+            ->select('users.id')
+            ->join('users', 'users.id = enrollments.user_id')
+            ->where('enrollments.course_id', $courseId)
+            ->findAll();
 
-// Get all students enrolled in this course
-$students = $this->enrollmentModel
-    ->select('users.id')
-    ->join('users', 'users.id = enrollments.user_id')
-    ->where('enrollments.course_id', $courseId)
-    ->findAll();
-
-foreach ($students as $student) {
-    $this->notificationModel->insert([
-        'user_id'   => $student['id'],
-        'message'   => '📚 New material has been uploaded in "' . esc($course['course_name']) . '".',
-        'is_read'   => 0,
-        'created_at'=> date('Y-m-d H:i:s')
-    ]);
-}
-
-// =====================================================================================
+        foreach ($students as $student) {
+            $this->notificationModel->insert([
+                'user_id'    => $student['id'],
+                'message'    => '📚 New material has been uploaded in "' . esc($course['course_name']) . '".',
+                'is_read'    => 0,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Material uploaded and notifications sent!');
     }
@@ -92,13 +109,21 @@ foreach ($students as $student) {
         if (!$material) {
             return redirect()->back()->with('error', 'File not found.');
         }
+
         return $this->response->download($material['file_path'], null);
     }
 
     // ✅ Delete file
     public function delete($id)
     {
-        $this->materialModel->delete($id);
+        $material = $this->materialModel->find($id);
+        if ($material) {
+            if (file_exists($material['file_path'])) {
+                unlink($material['file_path']);
+            }
+            $this->materialModel->delete($id);
+        }
+
         return redirect()->back()->with('success', 'Material deleted successfully.');
     }
 }

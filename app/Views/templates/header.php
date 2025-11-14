@@ -80,7 +80,7 @@
     <!-- Admin Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
       <div class="container">
-        <a class="navbar-brand fw-bold text-dark" href="<?= base_url('/dashboard') ?>">Admin Panel</a>
+        <a class="navbar-brand fw-bold text-dark" href="<?= base_url('/dashboard') ?>">Admin Portal</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAdmin">
           <i class="bi bi-list fs-1"></i>
         </button>

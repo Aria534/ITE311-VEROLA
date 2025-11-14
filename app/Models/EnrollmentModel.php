@@ -35,4 +35,23 @@ class EnrollmentModel extends Model
                     ->where('course_id', $courseId)
                     ->first() !== null;
     }
+
+    /**
+     * Get distinct students (users) who are enrolled in courses taught by a specific teacher
+     *
+     * @param int $teacherId
+     * @return array
+     */
+    public function getStudentsByTeacher($teacherId)
+    {
+        return $this->select('users.id AS user_id, users.username, users.email')
+                    ->join('courses', 'courses.id = enrollments.course_id')
+                    ->join('users', 'users.id = enrollments.user_id')
+                    ->where('courses.instructor_id', $teacherId)
+                    ->groupBy('users.id')
+                    ->findAll();
+    }
 }
+
+
+

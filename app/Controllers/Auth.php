@@ -147,6 +147,11 @@ public function dashboard()
         $data['teacherCourses'] = $courseModel
             ->orderBy('course_name', 'ASC')
             ->findAll();
+
+        // ✅ For teachers: show all users with role 'student' from users table
+        // If you'd rather show only students enrolled in this teacher's courses,
+        // we can switch this back to use enrollments once enrollment insertions are fixed.
+        $data['students'] = $this->userModel->where('role', 'student')->findAll();
     }
 
     // ✅ Admin: Show all available courses (fixed variable name)
@@ -158,5 +163,4 @@ public function dashboard()
 
     return view('auth/dashboard', $data);
 }
-
 }
