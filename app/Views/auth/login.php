@@ -1,3 +1,4 @@
+<?php include("app/Views/template.php") ?>
 <!-- app/Views/auth/login.php -->
 <!DOCTYPE html>
 <html lang="en">

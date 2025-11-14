@@ -35,6 +35,8 @@ $routes->get('/announcements', 'Announcement::index');
 // =======================
 $routes->post('course/enroll', 'Course::enroll');
 
+
+
 // Upload form (GET)
 $routes->get('/admin/course/(:num)/upload', 'Materials::upload/$1');
 
@@ -47,3 +49,7 @@ $routes->get('/materials/delete/(:num)', 'Materials::delete/$1');
 
 $routes->get('/notifications', 'Notifications::get');
 $routes->post('/notifications/mark_read/(:num)', 'Notifications::mark_as_read/$1');
+
+
+
+

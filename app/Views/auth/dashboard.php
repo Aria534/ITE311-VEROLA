@@ -125,49 +125,36 @@
 
       <?php if ($role === 'teacher'): ?>
        <!-- ================= TEACHER DASHBOARD ================= -->
-<div class="row g-4 mb-4">
-  <div class="col-md-3">
-    <div class="card border-0 bg-white shadow-sm h-100 text-center">
-      <div class="card-body">
-        <div class="mb-3">
-          <span class="d-inline-flex justify-content-center align-items-center bg-primary text-white rounded-circle" style="width:60px; height:60px;">
-            <i class="bi bi-people-fill fs-3"></i>
-          </span>
-        </div>
-        <h5 class="fw-bold mb-3">Manage Classes</h5>
-        <a href="#" class="btn btn-outline-primary btn-sm">View Classes</a>
-      </div>
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">My Students</h5>
     </div>
-  </div>
+    <div class="card-body">
 
-  <div class="col-md-3">
-    <div class="card border-0 bg-white shadow-sm h-100 text-center">
-      <div class="card-body">
-        <div class="mb-3">
-          <span class="d-inline-flex justify-content-center align-items-center bg-info text-white rounded-circle" style="width:60px; height:60px;">
-            <i class="bi bi-card-checklist fs-3"></i>
-          </span>
-        </div>
-        <h5 class="fw-bold mb-3">Grade Submissions</h5>
-        <a href="#" class="btn btn-outline-info btn-sm">Check Grades</a>
-      </div>
-    </div>
-  </div>
+        <?php if (!empty($students)): ?>
+            <div class="row g-3">
+                <?php foreach ($students as $s): ?>
+                    <div class="col-md-4">
+                        <div class="border rounded p-3 h-100">
+                            <h6 class="fw-bold mb-1"><?= esc($s['name']) ?></h6>
+                            <p class="text-muted mb-2"><?= esc($s['email']) ?></p>
+                            <span class="badge bg-success">Enrolled</span>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
 
-  <div class="col-md-3">
-    <div class="card border-0 bg-white shadow-sm h-100 text-center">
-      <div class="card-body">
-        <div class="mb-3">
-          <span class="d-inline-flex justify-content-center align-items-center bg-success text-white rounded-circle" style="width:60px; height:60px;">
-            <i class="bi bi-calendar-event fs-3"></i>
-          </span>
-        </div>
-        <h5 class="fw-bold mb-3">Calendar</h5>
-        <a href="#" class="btn btn-outline-success btn-sm">Open Calendar</a>
-      </div>
+        <?php else: ?>
+            <div class="text-center py-4 text-muted">
+                <i class="bi bi-people fs-1"></i>
+                <p class="mt-2">No students enrolled yet.</p>
+            </div>
+        <?php endif; ?>
+
     </div>
-  </div>
 </div>
+
+
 
 <!-- ================== COURSES & UPLOAD ================== -->
 <div class="card shadow-sm border-0 rounded-3 p-4 mt-4">

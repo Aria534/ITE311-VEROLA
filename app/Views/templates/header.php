@@ -1,3 +1,5 @@
+<?php include('app\Views\template.php'); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +15,9 @@
 </head>
 <body>
 
+<?php $role = session()->get('role'); ?>
+
+
 <?php if (session()->get('isLoggedIn')): ?>
   <?php if ($role === 'student'): ?>
     <!-- Student Navbar -->
@@ -24,7 +29,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarStudent">
           <ul class="navbar-nav ms-auto align-items-center">
-            <li class="nav-item"><a class="nav-link" href="<?= base_url('/') ?>"><i class="bi bi-house"></i> Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?= base_url('/home') ?>"><i class="bi bi-house"></i> Home</a></li>
             <li class="nav-item"><a class="nav-link" href="<?= base_url('/classes') ?>"><i class="bi bi-journal-text"></i> My Schedule</a></li>
 
             <!-- 🔔 Notification Dropdown -->
@@ -65,9 +70,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarTeacher">
           <ul class="navbar-nav ms-auto align-items-center">
-            <li class="nav-item"><a class="nav-link" href="<?= base_url('/courses') ?>"><i class="bi bi-book"></i> Manage Courses</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?= base_url('/students') ?>"><i class="bi bi-people"></i> Student List</a></li>
-
             <li class="nav-item"><a class="nav-link text-danger" href="<?= base_url('/logout') ?>"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
           </ul>
         </div>
