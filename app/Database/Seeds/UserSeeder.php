@@ -30,14 +30,14 @@ class UserSeeder extends Seeder
             ],
             // Teacher
             [
-                'username' => 'Jim Jamero',
-                'email'    => 'teacherjim@gmail.com',
+                'username' => 'Trinidad Bartulaba',
+                'email'    => 'teachertrini@gmail.com',
                 'password' => password_hash('teacher123', PASSWORD_DEFAULT),
                 'role'     => 'teacher',
             ],
             [
-                'username' => 'Bryll Nosotros',
-                'email'    => 'teacherbryll@gmail.com',
+                'username' => 'Karyo Balabal',
+                'email'    => 'teacherkar@gmail.com',
                 'password' => password_hash('teacher123', PASSWORD_DEFAULT),
                 'role'     => 'teacher',
             ],

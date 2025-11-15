@@ -35,8 +35,6 @@ $routes->get('/announcements', 'Announcement::index');
 // =======================
 $routes->post('course/enroll', 'Course::enroll');
 
-
-
 // Upload form (GET)
 $routes->get('/admin/course/(:num)/upload', 'Materials::upload/$1');
 

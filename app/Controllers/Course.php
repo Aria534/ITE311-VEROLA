@@ -4,20 +4,19 @@ namespace App\Controllers;
 
 use App\Models\CourseModel;
 use App\Models\EnrollmentModel;
-use App\Models\NotificationModel; // 👈 add this line
+use App\Models\NotificationModel;
 
 class Course extends BaseController
 {
     protected $courseModel;
     protected $enrollmentModel;
-    protected $session;
 
     public function __construct()
     {
         $this->courseModel = new CourseModel();
         $this->enrollmentModel = new EnrollmentModel();
-        $this->session = session();
         helper(['url', 'form']);
+        // ❌ Removed $this->session from constructor to avoid ini_set() error
     }
 
     // ===============================
@@ -25,6 +24,12 @@ class Course extends BaseController
     // ===============================
     public function enroll()
     {
+        // ✅ Initialize session safely
+        $session = \Config\Services::session();
+        if (! $session->isStarted()) {
+            $session->start();
+        }
+
         // ✅ Allow only AJAX or POST requests
         if (!$this->request->isAJAX() && $this->request->getMethod() !== 'POST') {
             return $this->response->setStatusCode(400)
@@ -35,7 +40,7 @@ class Course extends BaseController
         }
 
         // ✅ Ensure user is logged in
-        $userId = $this->session->get('user_id');
+        $userId = $session->get('user_id');
         if (!$userId) {
             return $this->response->setStatusCode(401)
                 ->setJSON([
@@ -54,7 +59,7 @@ class Course extends BaseController
                 ]);
         }
 
-        // ✅ Validate if the course actually exists
+        // ✅ Validate if the course exists
         $course = $this->courseModel->find($courseId);
         if (!$course) {
             return $this->response->setStatusCode(404)

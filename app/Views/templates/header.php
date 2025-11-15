@@ -30,8 +30,6 @@
         <div class="collapse navbar-collapse" id="navbarStudent">
           <ul class="navbar-nav ms-auto align-items-center">
             <li class="nav-item"><a class="nav-link" href="<?= base_url('/home') ?>"><i class="bi bi-house"></i> Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?= base_url('/classes') ?>"><i class="bi bi-journal-text"></i> My Schedule</a></li>
-
             <!-- 🔔 Notification Dropdown -->
             <li class="nav-item dropdown">
               <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -87,8 +85,6 @@
         <div class="collapse navbar-collapse" id="navbarAdmin">
           <ul class="navbar-nav ms-auto align-items-center">
             <li class="nav-item"><a class="nav-link" href="<?= base_url('/users') ?>"><i class="bi bi-person-gear"></i> Manage Users</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?= base_url('/settings') ?>"><i class="bi bi-gear"></i> System Settings</a></li>
-
             <li class="nav-item"><a class="nav-link text-danger" href="<?= base_url('/logout') ?>"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
           </ul>
         </div>
