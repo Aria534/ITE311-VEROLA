@@ -85,8 +85,8 @@
         <div class="collapse navbar-collapse" id="navbarAdmin">
           <ul class="navbar-nav ms-auto align-items-center">
             <li class="nav-item"><a class="nav-link" href="<?= base_url('/users') ?>"><i class="bi bi-person-gear"></i> Manage Users</a></li>
+            <li class="nav-item"><a class="nav-link" style="color:#6c757d;" href="<?= base_url('/courses/search') ?>"><i class="bi bi-journal-bookmark" style="color:#6c757d;"></i> Courses</a></li>
             <li class="nav-item"><a class="nav-link text-danger" href="<?= base_url('/logout') ?>"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
-          </ul>
         </div>
       </div>
     </nav>
@@ -96,7 +96,7 @@
 
 <!-- ================== JS SCRIPTS ================== -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <script>
 $(document).ready(function() {

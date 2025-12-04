@@ -48,6 +48,9 @@ $routes->get('/materials/delete/(:num)', 'Materials::delete/$1');
 $routes->get('/notifications', 'Notifications::get');
 $routes->post('/notifications/mark_read/(:num)', 'Notifications::mark_as_read/$1');
 
+//SEARCH
+$routes->get('/courses/search', 'Course::search');
+$routes->post('/courses/search', 'Course::search');
 
 
 

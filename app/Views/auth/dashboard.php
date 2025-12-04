@@ -134,7 +134,7 @@
                 <div class="card h-100 shadow-sm p-3 border-0" style="font-family: Arial, sans-serif;">
                   <h6 class="card-title"><i class="bi bi-book text-primary me-2"></i><?= esc($course['course_name']) ?></h6>
                   <p class="card-text text-muted mb-3">Manage and upload materials for this course.</p>
-                  <a href="<?= site_url('admin/course/' . esc($course['id']) . '/upload') ?>" class="btn btn-primary btn-sm">Upload Material</a>
+                  <a href="<?= base_url('admin/course/' . esc($course['id']) . '/upload') ?>" class="btn btn-primary btn-sm">Upload Material</a>
                 </div>
               </div>
             <?php endforeach; ?>
@@ -143,30 +143,27 @@
       </div>
     <?php endif; ?>
 
-    <!-- ================= ADMIN DASHBOARD ================= -->
-    <?php if ($role === 'admin'): ?>
-      <div class="mb-5">
-        <h5 class="mb-3 text-primary fw-bold" style="font-family: Arial, sans-serif;">📘 Manage Courses & Upload Materials</h5>
-        <?php if (!empty($adminCourses)): ?>
-          <ul class="list-group">
-            <?php foreach ($adminCourses as $course): ?>
-              <li class="list-group-item d-flex justify-content-between align-items-center" style="font-family: Arial, sans-serif;">
-                <div><i class="bi bi-book text-primary me-2"></i><?= esc($course['course_name']) ?></div>
-<a href="<?= site_url('admin/course/' . esc($course['id']) . '/upload') ?>" class="btn btn-primary btn-sm">
-    Upload Material
-</a>
-
-              </li>
-            <?php endforeach; ?>
-          </ul>
-        <?php else: ?>
-          <p class="text-muted mb-0" style="font-family: Arial, sans-serif;">No courses available for upload.</p>
-        <?php endif; ?>
-      </div>
+   <!-- ================= ADMIN DASHBOARD ================= -->
+<?php if ($role === 'admin'): ?>
+  <div class="mb-5">
+    <h5 class="mb-3 text-primary fw-bold" style="font-family: Arial, sans-serif;">
+      📘 Manage Courses & Upload Materials
+    </h5>
+    <?php if (!empty($adminCourses)): ?>
+      <ul class="list-group" id="adminCoursesList">
+        <?php foreach ($adminCourses as $course): ?>
+          <li class="list-group-item d-flex justify-content-between align-items-center admin-course-item" style="font-family: Arial, sans-serif;">
+            <div><i class="bi bi-book text-primary me-2"></i><?= esc($course['course_name']) ?></div>
+            <a href="<?= base_url('admin/course/' . esc($course['id']) . '/upload') ?>" class="btn btn-primary btn-sm">Upload Material</a>
+            </a>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+    <?php else: ?>
+      <p class="text-muted mb-0" style="font-family: Arial, sans-serif;">No courses available for upload.</p>
     <?php endif; ?>
-
   </div>
-</div>
+<?php endif; ?>
 
 
 <!-- ================= AJAX ENROLLMENT SCRIPT ================= -->
@@ -178,7 +175,7 @@ $(document).ready(function() {
     let button = $(this);
     let courseId = button.data('course-id');
 
-    $.post("<?= site_url('course/enroll') ?>", { course_id: courseId }, function(response) {
+    $.post("<?= base_url('course/enroll') ?>", { course_id: courseId }, function(response) {
       if (response.success) {
         $('#alertPlaceholder').html(`
           <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">

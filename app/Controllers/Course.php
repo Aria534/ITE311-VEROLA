@@ -26,8 +26,18 @@ class Course extends BaseController
     {
         // ✅ Initialize session safely
         $session = \Config\Services::session();
-        if (! $session->isStarted()) {
-            $session->start();
+        if (is_callable([$session, 'isStarted'])) {
+            if (! $session->isStarted()) {
+                $session->start();
+            }
+        } else {
+            if (method_exists($session, 'start')) {
+                try {
+                    $session->start();
+                } catch (\Exception $e) {
+                    log_message('error', 'Session start failed in Course::enroll - ' . $e->getMessage());
+                }
+            }
         }
 
         // ✅ Allow only AJAX or POST requests
@@ -49,7 +59,7 @@ class Course extends BaseController
                 ]);
         }
 
-        // ✅ Get the course ID from POST
+        // ✅ Get the course ID
         $courseId = $this->request->getPost('course_id');
         if (empty($courseId)) {
             return $this->response->setStatusCode(400)
@@ -69,7 +79,7 @@ class Course extends BaseController
                 ]);
         }
 
-        // ✅ Check if the user is already enrolled
+        // ✅ Check if already enrolled
         $exists = $this->enrollmentModel
             ->where('user_id', $userId)
             ->where('course_id', $courseId)
@@ -82,14 +92,14 @@ class Course extends BaseController
             ]);
         }
 
-        // ✅ Enroll the user in the course
+        // ✅ Enroll user
         $this->enrollmentModel->insert([
             'user_id' => $userId,
             'course_id' => $courseId,
             'enrolled_at' => date('Y-m-d H:i:s')
         ]);
 
-        // ✅ Create a notification record
+        // ✅ Create notification
         $notificationModel = new NotificationModel();
         $notificationModel->insert([
             'user_id' => $userId,
@@ -98,11 +108,38 @@ class Course extends BaseController
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
-        // ✅ Send success response
+        // ✅ Response
         return $this->response->setJSON([
             'success' => true,
             'message' => 'Enrollment successful! You have been enrolled in "' . $course['course_name'] . '".',
             'course_name' => $course['course_name']
         ]);
     }
+
+
+    // ===============================
+    // SEARCH COURSES
+    // ===============================
+ public function search()
+{
+    $searchTerm = $this->request->getGet('search_term');
+
+    if (!empty($searchTerm)) {
+        $this->courseModel->like('course_name', $searchTerm);
+        $this->courseModel->orLike('description', $searchTerm);
+    }
+
+    $courses = $this->courseModel->findAll();
+
+    if ($this->request->isAJAX()) {
+        return $this->response->setJSON($courses);
+    }
+
+    return view('templates/header')
+        . view('course/index', [
+            'courses' => $courses,
+            'searchTerm' => $searchTerm
+        ]);
 }
+}
+
