@@ -52,5 +52,15 @@ $routes->post('/notifications/mark_read/(:num)', 'Notifications::mark_as_read/$1
 $routes->get('/courses/search', 'Course::search');
 $routes->post('/courses/search', 'Course::search');
 
+// =======================
+// USER MANAGEMENT (Admin Only)
+// =======================
+$routes->get('/users', 'User::index');
+$routes->get('/users/create', 'User::create');
+$routes->post('/users/store', 'User::store');
+$routes->get('/users/edit/(:num)', 'User::edit/$1');
+$routes->post('/users/update/(:num)', 'User::update/$1');
+$routes->get('/users/delete/(:num)', 'User::delete/$1');
+
 
 
