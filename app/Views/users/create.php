@@ -6,7 +6,7 @@
       <div class="card shadow-sm border-0">
         <div class="card-header bg-primary text-white">
           <h4 class="mb-0" style="font-family: Arial, sans-serif;">
-            <i class="bi bi-person-plus"></i> Create New User
+            <i class="bi bi-person-plus"></i> Add New User
           </h4>
         </div>
         <div class="card-body">
@@ -23,6 +23,15 @@
 
           <form action="<?= base_url('users/store') ?>" method="POST" style="font-family: Arial, sans-serif;">
             <?= csrf_field() ?>
+
+            <div class="mb-3">
+              <label for="status" class="form-label">Status</label>
+              <select class="form-select" id="status" name="status" required>
+                <option value="">Select Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
 
             <div class="mb-3">
               <label for="username" class="form-label">Username <span class="text-danger">*</span></label>

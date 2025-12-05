@@ -4,7 +4,7 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold" style="font-family: Arial, sans-serif;">Manage Users</h2>
     <a href="<?= base_url('users/create') ?>" class="btn btn-primary">
-      <i class="bi bi-plus-circle"></i> Create New User
+      <i class="bi bi-plus-circle"></i> Add New User
     </a>
   </div>
 
@@ -35,7 +35,8 @@
                 <th>Username</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th>Created At</th>
+                <th>Status</th>
+                <th>Enrollment Time</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -56,7 +57,23 @@
                     ?>
                     <span class="badge bg-<?= $color ?>"><?= esc(ucfirst($user['role'])) ?></span>
                   </td>
-                  <td><?= esc(date('M d, Y', strtotime($user['created_at']))) ?></td>
+                  <td>
+                    <?php
+                    $statusColors = [
+                      'active' => 'success',
+                      'inactive' => 'secondary'
+                    ];
+                    $statusColor = $statusColors[$user['status']] ?? 'secondary';
+                    ?>
+                    <span class="badge bg-<?= $statusColor ?>"><?= esc(ucfirst($user['status'])) ?></span>
+                  </td>
+                  <td>
+                    <?php if (!empty($user['latest_enrollment_date'])): ?>
+                      <?= esc(date('M d, Y H:i', strtotime($user['latest_enrollment_date']))) ?>
+                    <?php else: ?>
+                      <span class="text-muted">Not enrolled</span>
+                    <?php endif; ?>
+                  </td>
                   <td>
                     <div class="btn-group" role="group">
                       <a href="<?= base_url('users/edit/' . $user['id']) ?>" 

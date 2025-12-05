@@ -61,6 +61,7 @@ $routes->post('/users/store', 'User::store');
 $routes->get('/users/edit/(:num)', 'User::edit/$1');
 $routes->post('/users/update/(:num)', 'User::update/$1');
 $routes->get('/users/delete/(:num)', 'User::delete/$1');
+$routes->get('/users/toggle-status/(:num)', 'User::toggleStatus/$1');
 
 
 

@@ -41,9 +41,16 @@ class User extends BaseController
             return $adminCheck;
         }
 
+        // Get users with their latest enrollment date
+        $users = $this->userModel->select('users.*, MAX(enrollments.enrollment_date) as latest_enrollment_date')
+            ->join('enrollments', 'enrollments.user_id = users.id', 'left')
+            ->groupBy('users.id')
+            ->orderBy('users.created_at', 'DESC')
+            ->findAll();
+
         $data = [
             'title' => 'Manage Users',
-            'users' => $this->userModel->orderBy('created_at', 'DESC')->findAll(),
+            'users' => $users,
         ];
 
         return view('users/index', $data);
@@ -76,7 +83,8 @@ class User extends BaseController
             'email'            => 'required|valid_email|is_unique[users.email]',
             'password'         => 'required|min_length[6]',
             'password_confirm' => 'required|matches[password]',
-            'role'             => 'required|in_list[student,teacher,admin]'
+            'role'             => 'required|in_list[student,teacher,admin]',
+            'status'           => 'required|in_list[active,inactive]'
         ];
 
         if (!$this->validate($rules)) {
@@ -90,6 +98,7 @@ class User extends BaseController
             'email'      => $this->request->getPost('email'),
             'password'   => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             'role'       => $this->request->getPost('role'),
+            'status'     => $this->request->getPost('status'),
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
@@ -140,7 +149,8 @@ class User extends BaseController
         $rules = [
             'username' => 'required|min_length[3]',
             'email'    => 'required|valid_email',
-            'role'     => 'required|in_list[student,teacher,admin]'
+            'role'     => 'required|in_list[student,teacher,admin]',
+            'status'   => 'required|in_list[active,inactive]'
         ];
 
         // Check if username is unique (excluding current user)
@@ -179,6 +189,7 @@ class User extends BaseController
             'username'   => $this->request->getPost('username'),
             'email'      => $this->request->getPost('email'),
             'role'       => $this->request->getPost('role'),
+            'status'     => $this->request->getPost('status'),
             'updated_at' => date('Y-m-d H:i:s')
         ];
 
@@ -191,6 +202,40 @@ class User extends BaseController
 
         return redirect()->to(base_url('users'))
             ->with('success', 'User updated successfully!');
+    }
+
+    /**
+     * Toggle user status (active/inactive)
+     */
+    public function toggleStatus($id)
+    {
+        $adminCheck = $this->checkAdmin();
+        if ($adminCheck !== null) {
+            return $adminCheck;
+        }
+
+        // Prevent toggling your own status
+        if ($id == session()->get('user_id')) {
+            return redirect()->to(base_url('users'))
+                ->with('error', 'You cannot change your own status.');
+        }
+
+        $user = $this->userModel->find($id);
+        if (!$user) {
+            return redirect()->to(base_url('users'))
+                ->with('error', 'User not found.');
+        }
+
+        $newStatus = ($user['status'] === 'active') ? 'inactive' : 'active';
+
+        $this->userModel->update($id, [
+            'status' => $newStatus,
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        $statusText = ucfirst($newStatus);
+        return redirect()->to(base_url('users'))
+            ->with('success', "User status changed to {$statusText} successfully!");
     }
 
     /**

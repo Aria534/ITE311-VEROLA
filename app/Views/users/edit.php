@@ -82,9 +82,9 @@
 
             <div class="mb-3">
               <label for="role" class="form-label">Role <span class="text-danger">*</span></label>
-              <select class="form-select <?= session()->getFlashdata('errors') && isset(session()->getFlashdata('errors')['role']) ? 'is-invalid' : '' ?>" 
-                      id="role" 
-                      name="role" 
+              <select class="form-select <?= session()->getFlashdata('errors') && isset(session()->getFlashdata('errors')['role']) ? 'is-invalid' : '' ?>"
+                      id="role"
+                      name="role"
                       required>
                 <option value="">Select Role</option>
                 <option value="student" <?= old('role', $user['role']) === 'student' ? 'selected' : '' ?>>Student</option>
@@ -94,6 +94,23 @@
               <?php if (session()->getFlashdata('errors') && isset(session()->getFlashdata('errors')['role'])): ?>
                 <div class="invalid-feedback">
                   <?= esc(session()->getFlashdata('errors')['role']) ?>
+                </div>
+              <?php endif; ?>
+            </div>
+
+            <div class="mb-3">
+              <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+              <select class="form-select <?= session()->getFlashdata('errors') && isset(session()->getFlashdata('errors')['status']) ? 'is-invalid' : '' ?>"
+                      id="status"
+                      name="status"
+                      required>
+                <option value="">Select Status</option>
+                <option value="active" <?= old('status', $user['status']) === 'active' ? 'selected' : '' ?>>Active</option>
+                <option value="inactive" <?= old('status', $user['status']) === 'inactive' ? 'selected' : '' ?>>Inactive</option>
+              </select>
+              <?php if (session()->getFlashdata('errors') && isset(session()->getFlashdata('errors')['status'])): ?>
+                <div class="invalid-feedback">
+                  <?= esc(session()->getFlashdata('errors')['status']) ?>
                 </div>
               <?php endif; ?>
             </div>
