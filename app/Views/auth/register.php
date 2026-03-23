@@ -4,16 +4,12 @@
     <meta charset="UTF-8">
     <title>Register</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<<<<<<< HEAD
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-=======
->>>>>>> 395ac66e141a3657ff7a8add8b095e1954f277b6
 
     <style>
         body { font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif; }
         h3 { font-weight: bold; }
         .btn-primary { font-weight: bold; }
-<<<<<<< HEAD
 
         .role-selector { display: flex; gap: 10px; }
         .role-option { flex: 1; }
@@ -47,11 +43,6 @@
     </style>
 </head>
 <body class="bg-light d-flex align-items-center justify-content-center min-vh-100 py-4">
-=======
-    </style>
-</head>
-<body class="bg-light d-flex align-items-center justify-content-center vh-100">
->>>>>>> 395ac66e141a3657ff7a8add8b095e1954f277b6
 
 <div class="col-md-4">
     <div class="card shadow-sm">
@@ -75,10 +66,6 @@
             <form action="<?= base_url('register') ?>" method="post">
                 <?= csrf_field() ?>
 
-<<<<<<< HEAD
-=======
-                <!-- FIXED: use "username" instead of "name" -->
->>>>>>> 395ac66e141a3657ff7a8add8b095e1954f277b6
                 <div class="mb-3">
                     <input type="text" name="username" class="form-control" placeholder="Username" value="<?= old('username') ?>" required>
                 </div>
@@ -95,7 +82,6 @@
                     <input type="password" name="password_confirm" class="form-control" placeholder="Confirm Password" required>
                 </div>
 
-<<<<<<< HEAD
                 <!-- Role Selection -->
                 <div class="mb-4">
                     <label class="form-label fw-bold text-muted small">Select Role</label>
@@ -131,8 +117,6 @@
                     </div>
                 </div>
 
-=======
->>>>>>> 395ac66e141a3657ff7a8add8b095e1954f277b6
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">Register</button>
                 </div>
@@ -146,8 +130,4 @@
 </div>
 
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> 395ac66e141a3657ff7a8add8b095e1954f277b6

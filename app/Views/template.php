@@ -11,11 +11,7 @@
 <!-- Light Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
   <div class="container-fluid">
-<<<<<<< HEAD
     <a class="navbar-brand fw-semibold" href="<?= base_url('/') ?>">Learning Management</a>
-=======
-    <a class="navbar-brand fw-semibold" href="#">Learning Management</a>
->>>>>>> 395ac66e141a3657ff7a8add8b095e1954f277b6
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,16 +35,7 @@
 </nav>
 <?php endif; ?>
 
-<<<<<<< HEAD
   <!-- Bootstrap Bundle JS with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-=======
-
-
-  <!-- Bootstrap Bundle JS with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
->>>>>>> 395ac66e141a3657ff7a8add8b095e1954f277b6

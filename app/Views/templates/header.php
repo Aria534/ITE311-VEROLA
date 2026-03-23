@@ -1,5 +1,3 @@
-<?php include('app\Views\template.php'); ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,8 +15,8 @@
 
 <?php $role = session()->get('role'); ?>
 
-
 <?php if (session()->get('isLoggedIn')): ?>
+
   <?php if ($role === 'student'): ?>
     <!-- Student Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
@@ -46,12 +44,10 @@
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li class="text-center">
-                  <!-- ✅ FIXED: lowercase URL -->
                   <a href="<?= base_url('/notifications') ?>" class="text-decoration-none small">View all notifications</a>
                 </li>
               </ul>
             </li>
-
             <li class="nav-item"><a class="nav-link text-danger" href="<?= base_url('/logout') ?>"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
           </ul>
         </div>
@@ -87,23 +83,25 @@
             <li class="nav-item"><a class="nav-link" href="<?= base_url('/users') ?>"><i class="bi bi-person-gear"></i> Manage Users</a></li>
             <li class="nav-item"><a class="nav-link" style="color:#6c757d;" href="<?= base_url('/courses/search') ?>"><i class="bi bi-journal-bookmark" style="color:#6c757d;"></i> Courses</a></li>
             <li class="nav-item"><a class="nav-link text-danger" href="<?= base_url('/logout') ?>"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+          </ul>
         </div>
       </div>
     </nav>
+
   <?php endif; ?>
 <?php endif; ?>
 
 
 <!-- ================== JS SCRIPTS ================== -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 $(document).ready(function() {
 
   // 🔁 Load Notifications
   function loadNotifications() {
-    $.get("<?= base_url('/notifications') ?>", function(response) {
+    $.get("<?= base_url('/notifications/json') ?>", function(response) {
       if (!response.success) return;
 
       const badge = $('#notificationBadge');
@@ -120,25 +118,23 @@ $(document).ready(function() {
         list.html('<p class="text-muted text-center my-2">No notifications</p>');
       } else {
         response.notifications.forEach(n => {
-        // Convert string "0"/"1" to boolean
-        const isRead = n.is_read == 1 || n.is_read === true;
-
-        const alertClass = isRead ? 'alert-secondary' : 'alert-info';
-        const buttonLabel = isRead ? 'Read' : 'Mark as Read';
-        const html = `
-          <div class="alert ${alertClass} d-flex justify-content-between align-items-center p-2 mb-2 rounded-3">
-            <div class="me-2 flex-grow-1">${n.message}</div>
-            <button 
-              class="btn btn-sm ${isRead ? 'btn-outline-secondary' : 'btn-outline-primary'}"
-              onclick="markAsRead(${n.id})"
-              ${isRead ? 'disabled' : ''}
-            >
-              ${buttonLabel}
-            </button>
-          </div>
-        `;
-        list.append(html);
-      });
+          const isRead = n.is_read == 1 || n.is_read === true;
+          const alertClass = isRead ? 'alert-secondary' : 'alert-info';
+          const buttonLabel = isRead ? 'Read' : 'Mark as Read';
+          const html = `
+            <div class="alert ${alertClass} d-flex justify-content-between align-items-center p-2 mb-2 rounded-3">
+              <div class="me-2 flex-grow-1">${n.message}</div>
+              <button 
+                class="btn btn-sm ${isRead ? 'btn-outline-secondary' : 'btn-outline-primary'}"
+                onclick="markAsRead(${n.id})"
+                ${isRead ? 'disabled' : ''}
+              >
+                ${buttonLabel}
+              </button>
+            </div>
+          `;
+          list.append(html);
+        });
       }
     }).fail(() => {
       console.error('❌ Failed to load notifications (check route or server).');
