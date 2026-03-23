@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Database\Seeds;
+
+use CodeIgniter\Database\Seeder;
+
+class UserSeeder extends Seeder
+{
+    public function run()
+    {
+        $this->db->disableForeignKeyChecks();
+        $this->db->table('enrollments')->truncate();
+        $this->db->table('courses')->truncate();
+        $this->db->table('users')->truncate();
+        $this->db->enableForeignKeyChecks();
+
+        $data = [
+            [
+                'username' => 'Aira P. Verola',
+                'email'    => 'airaverola@gmail.com',
+                'password' => password_hash('airaverola123', PASSWORD_DEFAULT),
+                'role'     => 'student',
+            ],
+            [
+                'username' => 'Hazel Acierto',
+                'email'    => 'hazel@gmail.com',
+                'password' => password_hash('hazel123', PASSWORD_DEFAULT),
+                'role'     => 'student',
+            ],
+            [
+                'username' => 'Leizl Casilao',
+                'email'    => 'leizl@gmail.com',
+                'password' => password_hash('leizl123', PASSWORD_DEFAULT),
+                'role'     => 'student',
+            ],
+            [
+                'username' => 'Trinidad Bartulaba',
+                'email'    => 'teachertrini@gmail.com',
+                'password' => password_hash('teacher123', PASSWORD_DEFAULT),
+                'role'     => 'teacher',
+            ],
+            [
+                'username' => 'Karyo Balabal',
+                'email'    => 'teacherkar@gmail.com',
+                'password' => password_hash('teacher123', PASSWORD_DEFAULT),
+                'role'     => 'teacher',
+            ],
+            [
+                'username' => 'Admin',
+                'email'    => 'admin@gmail.com',
+                'password' => password_hash('admin123', PASSWORD_DEFAULT),
+                'role'     => 'admin',
+            ],
+        ];
+
+        $this->db->table('users')->insertBatch($data);
+    }
+}
