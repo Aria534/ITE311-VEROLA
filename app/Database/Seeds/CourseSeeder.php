@@ -1,91 +1,65 @@
 <?php
 
-namespace App\Database\Seeds;
+use CodeIgniter\Router\RouteCollection;
 
-use CodeIgniter\Database\Seeder;
+/**
+ * @var RouteCollection $routes
+ */
 
-class CourseSeeder extends Seeder
-{
-    public function run()
-    {
-        $this->db->disableForeignKeyChecks();
-        $this->db->table('enrollments')->truncate();
-        $this->db->table('courses')->truncate();
-        $this->db->enableForeignKeyChecks();
+$routes->get('/', 'Auth::login');
+$routes->get('/home', 'Home::index');
+$routes->get('/about', 'Home::about');
+$routes->get('/contact', 'Home::contact');
 
-        $data = [
-            [
-                'course_name'   => 'Introduction to Programming',
-                'description'   => 'Learn the basics of coding using Python and logic building.',
-                'instructor_id' => 4,
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s'),
-            ],
-            [
-                'course_name'   => 'Web Development Fundamentals',
-                'description'   => 'Build and design basic websites using HTML, CSS, and JavaScript.',
-                'instructor_id' => 4,
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s'),
-            ],
-            [
-                'course_name'   => 'Object-Oriented Programming',
-                'description'   => 'Master OOP concepts like classes, inheritance, and polymorphism.',
-                'instructor_id' => 4,
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s'),
-            ],
-            [
-                'course_name'   => 'Mobile App Development',
-                'description'   => 'Create cross-platform mobile applications using modern frameworks.',
-                'instructor_id' => 4,
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s'),
-            ],
-            [
-                'course_name'   => 'Software Engineering Principles',
-                'description'   => 'Study SDLC, agile methodologies, and software design patterns.',
-                'instructor_id' => 4,
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s'),
-            ],
-            [
-                'course_name'   => 'Database Management Systems',
-                'description'   => 'Understand relational databases and SQL fundamentals.',
-                'instructor_id' => 5,
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s'),
-            ],
-            [
-                'course_name'   => 'Data Structures and Algorithms',
-                'description'   => 'Learn how to organize and optimize data efficiently.',
-                'instructor_id' => 5,
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s'),
-            ],
-            [
-                'course_name'   => 'Computer Networks',
-                'description'   => 'Explore networking protocols, TCP/IP, and network security basics.',
-                'instructor_id' => 5,
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s'),
-            ],
-            [
-                'course_name'   => 'Operating Systems',
-                'description'   => 'Understand OS concepts including processes, memory, and file systems.',
-                'instructor_id' => 5,
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s'),
-            ],
-            [
-                'course_name'   => 'Information Security',
-                'description'   => 'Learn cybersecurity fundamentals, encryption, and threat prevention.',
-                'instructor_id' => 5,
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s'),
-            ],
-        ];
+// =======================
+// AUTHENTICATION
+// =======================
+$routes->get('/register', 'Auth::register');
+$routes->post('/register', 'Auth::register');
 
-        $this->db->table('courses')->insertBatch($data);
-    }
-}
+$routes->get('/login', 'Auth::login');
+$routes->post('/login', 'Auth::login');
+
+$routes->get('/logout', 'Auth::logout');
+
+// General dashboard (redirects based on role)
+$routes->get('/dashboard', 'Auth::dashboard');
+
+
+// =======================
+// ANNOUNCEMENTS
+// =======================
+$routes->get('/announcements', 'Announcement::index');
+
+// =======================
+// COURSES
+// =======================
+$routes->post('course/enroll', 'Course::enroll');
+
+// Upload form (GET)
+$routes->get('/admin/course/(:num)/upload', 'Materials::upload/$1');
+
+// Handle upload (POST)
+$routes->post('/admin/course/(:num)/upload', 'Materials::upload/$1');
+
+// Download and delete
+$routes->get('/materials/download/(:num)', 'Materials::download/$1');
+$routes->get('/materials/delete/(:num)', 'Materials::delete/$1');
+
+$routes->get('/notifications', 'Notifications::get');
+$routes->post('/notifications/mark_read/(:num)', 'Notifications::mark_as_read/$1');
+
+//SEARCH
+$routes->get('/courses/search', 'Course::search');
+$routes->post('/courses/search', 'Course::search');
+
+// =======================
+// USER MANAGEMENT (Admin Only)
+// =======================
+$routes->get('/users', 'User::index');
+$routes->get('/users/create', 'User::create');
+$routes->post('/users/store', 'User::store');
+$routes->get('/users/edit/(:num)', 'User::edit/$1');
+$routes->post('/users/update/(:num)', 'User::update/$1');
+$routes->get('/users/delete/(:num)', 'User::delete/$1');
+$routes->get('/users/toggle-status/(:num)', 'User::toggleStatus/$1');
